@@ -27,3 +27,4 @@ data_processed/
 
 # large data outputs
 zip/
+.superpowers/
