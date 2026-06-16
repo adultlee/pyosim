@@ -70,8 +70,8 @@ export default function App() {
           <div>
             <h1 className="text-lg font-semibold mb-1">쌍둥이 득표</h1>
             <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-              서로 다른 투표구에서 <strong>후보의 이름과 득표수가 모두 동일</strong>한 사례.
-              득표 임계값은 두지 않으며, 당일투표·사전투표·관외사전투표·거소선상을 같은 구분끼리 비교합니다.
+              서로 다른 두 읍면동에서 <strong>같은 두 후보가 같은 득표수</strong>를 받은 사례.
+              저득표 노이즈를 빼기 위해 각 후보 10표 이상인 동률만 보며, 같은 투표 구분(사전·당일 등)끼리 비교합니다.
             </p>
           </div>
           <div
@@ -148,9 +148,38 @@ export default function App() {
         )}
 
         {data && selectedRound !== null && (
-          <TwinVoteViewer data={data} electionType={selectedElection} roundLabel={currentElectionIndex?.roundLabels[selectedRound] ?? selectedRound} />
+          <TwinVoteViewer data={data} roundLabel={currentElectionIndex?.roundLabels[selectedRound] ?? selectedRound} />
         )}
       </main>
+
+      <footer
+        className="mt-12 px-6 py-8"
+        style={{ borderTop: '1px solid var(--color-border)', color: 'var(--color-text-tertiary)' }}
+      >
+        <div className="max-w-7xl mx-auto flex flex-col gap-3 text-xs leading-relaxed">
+          <p>
+            <strong style={{ color: 'var(--color-text-secondary)' }}>데이터 출처</strong> · 중앙선거관리위원회
+            선거통계시스템(info.nec.go.kr)의 공식 개표결과를 가공한 자료입니다.
+          </p>
+          <p>
+            <strong style={{ color: 'var(--color-text-secondary)' }}>쌍둥이 득표란</strong> · 같은 비교 단위 안에서
+            서로 다른 두 읍면동이 같은 두 후보에게 같은 득표수를 준 경우입니다. 저득표 노이즈를 빼기 위해 각 후보
+            10표 이상인 동률만 집계하며, 같은 투표 구분끼리 비교합니다.{' '}
+            <a
+              href="https://github.com/adultlee/pyosim/blob/main/docs/twin-vote-spec.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--color-accent)' }}
+            >
+              정의·방법론 자세히 →
+            </a>
+          </p>
+          <p style={{ color: 'var(--color-text-tertiary)' }}>
+            이 자료는 통계적 이상이나 부정선거를 <strong>주장하지도, 반박하지도 않습니다.</strong> "과거 선거에서 이런
+            일이 얼마나 자주 있었나"를 빈도로 보여주는 중립적 맥락 자료이며, 확률 계산은 하지 않습니다.
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }
