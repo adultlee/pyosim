@@ -1,0 +1,29 @@
+# deps
+node_modules/
+web/node_modules/
+
+# build
+web/dist/
+
+# env
+.env
+.env.local
+
+# OS
+.DS_Store
+
+# python
+__pycache__/
+.venv/
+.pytest_cache/
+
+# editor / tooling
+.claude/settings.local.json
+
+# data (원본·가공 산출물은 로컬 전용 — ETL로 재생성)
+data_raw/
+data_processed/
+
+# large data outputs (로컬 전용 — git에서 제외)
+web/public/twin_votes_*.json
+zip/

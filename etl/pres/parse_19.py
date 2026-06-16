@@ -1,0 +1,90 @@
+# etl/pres/parse_19.py
+"""19대(2017) 대통령선거 파서."""
+
+import pandas as pd
+from etl.pres.schema import normalize_level
+
+RAW_PATH = "data_raw/대통령선거 개표결과(제14대~제18대)/제19대 대통령선거 개표자료.xlsx"
+ROUND = 19
+
+
+def _clean_num(series):
+    return pd.to_numeric(
+        series.astype(str).str.replace(",", "", regex=False).str.strip(),
+        errors="coerce",
+    )
+
+
+def _parse_cand_col(col_name):
+    col_name = col_name.strip()
+    if "\n" in col_name:
+        parts = col_name.split("\n", 1)
+        return parts[0].strip(), parts[1].strip()
+    tokens = col_name.split()
+    if len(tokens) >= 2:
+        return " ".join(tokens[:-1]), tokens[-1]
+    return col_name, ""
+
+
+def parse_19(path=RAW_PATH):
+    raw = pd.read_excel(path, sheet_name="19대선", header=None)
+
+    cand_labels = []
+    for val in raw.iloc[1, 6:].tolist():
+        v = str(val).strip()
+        if v in ("nan", "계", "NaN", ""):
+            continue
+        cand_labels.append(v)
+
+    data = raw.iloc[2:].copy()
+    data.columns = ["시도", "구시군", "읍면동", "투표구", "선거인수", "투표수",
+                    *cand_labels, *["_extra"] * (len(data.columns) - 6 - len(cand_labels))]
+    data = data[["시도", "구시군", "읍면동", "투표구", "선거인수", "투표수"] + cand_labels].copy()
+
+    data["시도"] = data["시도"].ffill()
+    data["구시군"] = data["구시군"].ffill()
+    data["읍면동"] = data["읍면동"].ffill()
+
+    total_mask = data["읍면동"].astype(str).str.contains("합계", na=False)
+    totals_raw = data[total_mask].copy()
+    totals_raw["투표수"] = _clean_num(totals_raw["투표수"])
+    totals = [
+        {"시도": row["시도"], "구시군": row["구시군"], "투표수": row["투표수"]}
+        for _, row in totals_raw.iterrows()
+        if pd.notna(row["구시군"]) and "합계" not in str(row["구시군"])
+        and "전국" not in str(row["시도"])
+    ]
+
+    remove_mask = data["읍면동"].astype(str).str.contains("합계|소계", na=False)
+    remove_mask |= data["구시군"].astype(str).str.contains("합계|소계|합계\\(특별시\\)|합계\\(광역시\\)|합계\\(도\\)", na=False)
+    remove_mask |= data["시도"].astype(str).str.contains("전국", na=False)
+    # 19대는 각 읍면동마다 투표구='합계' 소계행이 있으므로 제거
+    remove_mask |= data["투표구"].astype(str).str.strip().isin(["소계", "합계"])
+    data = data[~remove_mask].copy()
+
+    for col in ["선거인수", "투표수"] + cand_labels:
+        if col in data.columns:
+            data[col] = _clean_num(data[col])
+
+    rows = []
+    for _, row in data.iterrows():
+        tpgu = str(row["투표구"]) if pd.notna(row["투표구"]) else ""
+        for label in cand_labels:
+            party, name = _parse_cand_col(label)
+            rows.append({
+                "선거_회차": ROUND,
+                "선거일": "2017-05-09",
+                "시도": row["시도"],
+                "구시군": row["구시군"],
+                "읍면동": row["읍면동"],
+                "투표구": tpgu,
+                "선거인수": row["선거인수"],
+                "투표수": row["투표수"],
+                "후보자": name,
+                "정당": party,
+                "득표수": row[label],
+                "무효투표수": None,
+                "기권수": None,
+                "level": normalize_level(tpgu),
+            })
+    return rows, totals

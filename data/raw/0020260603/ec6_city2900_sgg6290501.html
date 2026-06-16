@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>중앙선거관리위원회 선거통계시스템</title>
+<script type="text/javascript" src="/common/js/jquery/jquery-1.12.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/common/css/base_v2.css?ver=231025" />
+<link rel="stylesheet" type="text/css" href="/common/css/submains_v2.css?ver=240327" />
+<script type="text/javascript" src="/common/js/submains.js?ver=260202"></script>
+<script type="text/javascript">
+var RBtnRemoveList = ["HWP"];
+	</script>
+<script type="text/javascript" src="/common/js/search.js?ver=231025" charset="utf-8"></script>
+	<!--[if lt IE 9]>
+	    <script type="text/javascript" src="/common/js/html5shiv.js"></script>
+	<![endif]-->
+	<!--[if lte IE 9]>
+		<link type="text/css" rel="stylesheet" href="/common/css/jquery.Placeholders.monkey.patch.min.css" />
+		<script type="text/javascript" src="/common/js/placeholders.min.js"></script>
+		<script type="text/javascript" src="/common/js/jquery.Placeholders.monkey.patch.min.js"></script>
+		<script type="text/javascript">var underIE = true;</script>
+	<![endif]-->
+
+</head>
+<body class="bg">
+<div id="skipNav">
+    <a href="#container">본문 바로가기</a>
+</div>
+<div id="wrapper"> 
+	<div class="w_inner"> 
+
+	<div style="display:none;"></div>
+		<div id="header">
+    <div class="top_section">  
+        <h1><a href="/main/main_load.xhtml"><span class="blind">중앙선거관리위원회 선거통계시스템 홈으로 가기</span></a></h1>
+        <ul class="select_election sec">
+		    <li class="eleft"><a href="javascript:void(0)" class="on" title="선택됨"><span>최근선거</span></a></li>
+		    <li class="eright"><a href="/main/main_previous_load.xhtml"><span>역대선거</span></a></li>
+        </ul>
+        <ul class="t_search" >
+ 			<li class="tit"><a href="/search/searchCandidate.xhtml" >통합검색</a></li>
+ 			<li><input type="text" id="searchKeyword" class="search_input krinput" onkeypress="if(event.keyCode == 13){fn_commonSearch();return false;}" maxlength="30" title="후보자 성명 입력" placeholder="후보자 성명 입력" /></li>
+ 			<li><a href="javascript:void(0)" onclick="javascript:fn_commonSearch();" class="btn_t_search searchBtn"><span class="blind">검색</span></a></li>
+		</ul>
+        
+        <div class="s_election" id="s_election">
+            <div class="p_top">
+                <h4>선거선택</h4>
+                <p><a class="cbtn" href="javascript:void(0)"><span>닫기</span></a></p>
+            </div>
+            <div class="p_body">
+               <ul>
+					<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI">제9회 전국동시지방선거</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020250603&topMenuId=BI">제21대 대통령선거</a></li>
+						</ul>
+            </div>
+        </div>
+        </div>
+    <div id="gnb">
+    	<h2 class="tit_elect" style="line-height:1.4;">
+			<p class="date" style="font-size:17px;">2026년 6월 3일</p>
+			<p class="title">제9회 전국동시지방선거</p>
+        </h2>
+        
+        <nav class="gnb_area">
+        	<ul class="gnblist">
+			<li>
+					<a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI" class="m_BI">
+						<span>기본현황</span>
+					</a>
+					<ul class="sub_menu">
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI&secondMenuId=BIES01">선거일정</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI&secondMenuId=BIGI04">위원회주소</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI&secondMenuId=BIGI01">선거구수 및 정수현황</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI&secondMenuId=BIGI05">선거구 및 읍면동현황</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI&secondMenuId=BIPB02">선거인명부 확정상황</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI&secondMenuId=BIAP01">사전투표소 현황</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI&secondMenuId=BIPP01">선거일투표소 현황</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=BI&secondMenuId=BICP01">개표소 현황</a></li>
+						</ul>
+				</li>	
+			<li>
+					<a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=CP" class="m_CP">
+						<span>후보자</span>
+					</a>
+					<ul class="sub_menu">
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=CP&secondMenuId=CPRI01">후보자 등록수</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=CP&secondMenuId=CPRI03">후보자 명부</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=CP&secondMenuId=CPRI04">무투표선거구 후보자명부</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=CP&secondMenuId=CPRI05">사퇴/사망/등록무효</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=CP&secondMenuId=CPRI06">후보자 통계</a></li>
+						</ul>
+				</li>	
+			<li>
+					<a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=EC" class="m_EC">
+						<span>선거운동</span>
+					</a>
+					<ul class="sub_menu">
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=EC&secondMenuId=ECEO01">정당선거사무소  설치내역</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=EC&secondMenuId=ECEE01">후보자 선거운동기구 설치내역</a></li>
+						</ul>
+				</li>	
+			<li>
+					<a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC" class="m_VCon">
+						<span>투·개표</span>
+					</a>
+					<ul class="sub_menu">
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCAP01">사전투표진행상황(위원회별)</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCAP02">사전투표진행상황(사전투표소별)</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCVP01">투표진행상황</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCCP09">개표진행상황</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCCP08">개표단위별 개표결과</a></li>
+						</ul>
+				</li>	
+			<li>
+					<a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=EP" class="m_EP">
+						<span>당선인</span>
+					</a>
+					<ul class="sub_menu">
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=EP&secondMenuId=EPEI01">당선인 명부</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=EP&secondMenuId=EPEI02">무투표당선인 명부</a></li>
+						<li><a href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=EP&secondMenuId=EPEI03">당선인 통계</a></li>
+						</ul>
+				</li>	
+			</ul>
+        </nav>
+		<div class="gnb_bg">
+		</div>		
+        <div class="selSecondMenu">
+        	<ul class="selSubmu">
+				<li><a  href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCAP01">사전투표진행상황(위원회별)</a></li>
+						<li><a  href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCAP02">사전투표진행상황(사전투표소별)</a></li>
+						<li><a  href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCVP01">투표진행상황</a></li>
+						<li><a  href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCCP09">개표진행상황</a></li>
+						<li><a class="on" title="선택됨" href="/main/showDocument.xhtml?electionId=0020260603&topMenuId=VC&secondMenuId=VCCP08">개표단위별 개표결과</a></li>
+						</ul>
+        </div>
+        </div>
+    </div>
+
+
+<div id="pop" style="width: 500px; height: 400px; position: absolute; border: 1px solid rgb(217, 217, 217); background-color: rgb(255, 255, 255); left: 451.5px; top: 90px; display:none" onmousedown="startDrag(event, this)">
+	<div id="pop_title" class="title"><h3 align="center" style="margin: 0; padding: 10px; background-color:#2e3d64; color: #fff;">공지사항</h3></div>
+	<div id="pop_main" style="padding: 20px;">
+		<p style="font-size:25px;">선거통계시스템 작업 안내<br><br></p>
+		<p style="font-size:18px;">선거통계시스템의 안정적 서비스를 위한 서버점검 작업으로 <br />일부서비스가 원활하지 않을 수 있음을 알려드립니다.<br><br></p>
+		<p style="font-size:16px;">☞ 작업일시<br>2023. 9. 26.(화) 18:00 ~ 9. 27.(수) 09:00<br></p>
+	</div>
+	<div id="pop_close" style="position:absolute; left:0; right: 0; bottom: 0; padding: 10px; background-color:#555; color: #fff;">
+		<div style="text-align:left">
+			<input type="checkbox" id="todayClose" class="todayClose">
+ 			<label for="todayClose">오늘하루 그만보기</label>
+			<input style="font-size: 13px; background-color: #555; color: white; padding-top: 2px; float:right;" type="button" id="buttonClose" class="buttonClose" value="창닫기" onclick="javascript:checkedFunc();">
+		</div>
+	</div>
+   </div>
+
+<script type="text/javascript">
+
+$(function(){
+	
+	var electionId = "0020260603";    
+	
+    
+	var secondMenuId = "VCCP08";
+	
+    
+	var menuId = [];
+	
+    
+    if(menuId.length > 0){
+    	for(var i=0; i <= menuId.length; i++){
+    		if(menuId[i] == secondMenuId){
+    			if (getCookie("subNoticePop") != "done") {
+    				
+    				popupOpen();
+    			}
+    		}
+    	}
+    }
+});
+
+
+
+function popupOpen() {
+	var width = $(window).width();
+	var height = $(window).height();
+	
+	$('#pop').css("z-index", "9999");
+	$('#pop').css("position", "absolute");
+	$('#pop').css("border", "1px solid #d9d9d9");
+	$('#pop').css("background-color", "#fff");
+	$('#pop').css({'left':(width - 500 )/2, 'top':(height - 500 )/2 });
+	$('#pop').show();
+}
+
+
+var img_L = 0;
+var img_T = 0;
+var targetObj;
+
+function getLeft(o) {
+	return parseInt(o.style.left.replace('px', ''));
+}
+
+function getTop(o) {
+	return parseInt(o.style.top.replace('px', ''));
+}
+
+function moveDrag(e) {
+	var e_obj = window.event? window.event : e;
+	var dmvx = parseInt(e_obj.clientX + img_L);
+	var dmvy = parseInt(e_obj.clientY + img_T);
+	
+	targetObj.style.left = dmvx+"px";
+	targetObj.style.top = dmvy+"px";
+	return false;
+}
+
+function startDrag(e, obj){
+	targetObj = obj;
+	var e_obj = window.event? window.event : e;
+	
+	img_L = getLeft(obj) - e_obj.clientX;
+	img_T = getTop(obj) - e_obj.clientY;
+	
+	document.onmousemove = moveDrag;
+	document.onmouseup = stopDrag;
+	if(e_obj.preventDefault)e_obj.preventDefault();
+}
+
+function stopDrag() {
+	document.onmousemove = null;
+	document.onmouseup = null;
+}
+
+	
+function getCookie(name) {
+	var nameOfCookie = name + "=";
+	var x = 0;
+	while (x <= document.cookie.length) {
+		var y = (x + nameOfCookie.length);
+		if (document.cookie.substring(x, y) == nameOfCookie) {
+			if ((endOfCookie = document.cookie.indexOf(";", y)) == -1)
+				endOfCookie = document.cookie.length;
+			return unescape(document.cookie.substring(y, endOfCookie));
+		}
+		x = document.cookie.indexOf(" ", x) + 1;
+		if (x == 0)
+			break;
+	}
+	return "";
+}
+
+function setCookie(name, value, expiredays) {
+	var todayDate = new Date();
+	todayDate.setDate(todayDate.getDate() + expiredays);
+	document.cookie = name + "=" + escape(value) + "; path=/; expires="	+ todayDate.toGMTString() + ";";
+}
+
+
+var checkedFunc = function() {
+	var todayCheck = document.getElementById('todayClose');
+	if (todayCheck.checked) {
+		setCookie("subNoticePop", "done", 1);
+		$('#pop').hide();
+	} else {
+		$('#pop').hide();
+	}
+};
+
+</script><style type="text/css" media="all" title="default">@import "/common/css/base_v2.css?ver=231025";</style>
+
+<script type="text/javascript" charset="utf-8" src="/common/js/jquery/jquery-1.12.1.min.js" ></script>
+<script type="text/javascript" charset="utf-8" src="/common/js/jquery/jquery.blockUI.js" ></script>
+<script type="text/javascript" charset="utf-8" src="/common/js/jquery/jquery.jsonUtil.js"></script>
+<script type="text/javascript" charset="utf-8" src="/common/js/electioncommon.js?ver=260326"></script>
+<script type="text/javascript" charset="utf-8" src="/ubi4/js/ubi.js?ver=240201"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	if($("#electionType0").hasClass("on")){
+		$("select#electionName").attr("title", "선거일자");
+	}
+	else{
+		$("select#electionName").attr("title", "선거회차");	
+	}
+	$("select#electionNameJaeBo").attr("title", "선거일자");
+	$("select#electionCode").attr("title", "선거구분");
+	$("select#cityCode").attr("title", "시도");
+	$("select#sggCityCode").attr("title", "선거구");
+	$("select#townCode").attr("title", "구시군");
+	$("select#townCodeFromSgg").attr("title", "구시군");
+	$("select#sggTownCode").attr("title", "선거구(구시군)");
+	$("select#proportionalRepresentationCode").attr("title", "비례정당");
+	$("select#genderCode").attr("title", "성별");
+	$("select#dateCode").attr("title", "투표일자");
+	$("select#searchType").attr("title", "조회구분");
+	$("select#registorPartyCode").attr("title", "조회구분");
+	$("select#giguCode").attr("title", "선거운동기구");
+	$("select#maxMinCode").attr("title", "최다최소");
+	$("select#timeCode").attr("title", "투표시간");
+	
+});
+</script><script type="text/javascript">
+//<[CDATA[
+	var DOC = {ROOT : ''};
+	var previousCityCode = '2900';
+	var previousTownCode = '-1';
+	var previousSggCityCode = '6290501';
+	var previousSggTownCode = '-1';
+
+
+	
+		var RBtnRemoveList = ["HWP","엑셀 다운로드","PDF 다운로드"];
+	
+
+
+	$(document).ready(function(){
+	    setSubTitle();
+		settingYN();
+		
+		
+		if ('' != 'true') {
+			changCityCodeSelectBox('6');
+		}
+		
+
+		$('#searchForm').submit(chooseStatementId);
+		$('.electionType').click(changeElectionCode);
+		$('#cityCode').change(changeCityCode);
+		$('#sggCityCode').change(changeSggCityCode);
+		$('#townCodeFromSgg').change(settingYN);
+		$('#townCode').change(changeTwCode);
+		$('#sggTownCode').change(settingYN);
+
+		$('.filter a.on').attr('title','선택됨');
+
+	});
+		
+	
+	function setSubTitle() {
+		if ($('#electionCode').val() > 0 ) {
+			$('#electionName').html(retrieveSelectedName('electionCode'));
+		}
+		if ($('#cityCode').val() > 0) {
+			$('#cityName').html(retrieveSelectedName('cityCode'));
+		}
+		if ($('#townCode').val() > 0) {
+			$('#townName').html(retrieveSelectedName('townCode'));
+		}
+		if ($('#sggCityCode').val() > 0) {
+			$('#sggCityName').html(retrieveSelectedName('sggCityCode'));
+		}
+		if ($('#sggTownCode').val() > 0) {
+			$('#sggTownName').html(retrieveSelectedName('sggTownCode'));
+		}
+		if ($('#townCodeFromSgg').val() > 0) {
+			$('#townNameFromSgg').html(retrieveSelectedName('townCodeFromSgg'));
+		}
+	}
+	
+	
+	function changeElectionCode(e) {
+					
+		changCityCodeSelectBox($('#electionCode').val()); 
+		
+
+		$('#cityCode').val(-1);
+		$('#townCode').val(-1);
+		$('#sggCityCode').val(-1);
+		$('#sggTownCode').val(-1);
+		previousCityCode = -1;	
+		previousSggCityCode = -1;	
+		previousTownCode = -1;
+		previousSggTownCode = -1;	
+		changeSelectBox();
+	}
+
+	
+	function changeCityCode(e){
+		$('#sggCityCode').val(-1);
+		$('#townCode').val(-1);
+		$('#sggTownCode').val(-1);
+		previousCityCode = -1;	
+		previousSggCityCode = -1;	
+		previousTownCode = -1;
+		previousSggTownCode = -1;	
+		changeSelectBox();
+	}
+	
+	
+	function changeSggCityCode(e){
+		$('#townCodeFromSgg').val(-1);
+		previouseTownCodeFromSgg = -1;
+		changeSelectBox();
+	}
+	
+
+	
+	function changeTwCode(e){
+		$('#sggTownCode').val(-1);
+		previousSggTownCode = -1;
+		
+		if($('#electionCode').val() == 1 || $('#electionCode').val() == 7)
+			settingYN();
+		else
+			changeSelectBox();
+	}
+	
+	
+	function changeTownCode(e){
+		$('#sggTownCode').val(-1);
+		previousSggTownCode = -1;	
+		changeSelectBox();
+	}
+
+	
+	function changeSelectBox(){
+		var electionId = $('#electionId').val();
+		var electionCode = $('#electionCode').val();
+		var cityCode = $('#cityCode').val();
+		var sggCityCode = $('#sggCityCode').val();
+		var townCode = $('#townCode').val();			
+			
+		if( electionCode == 1 || electionCode == 3 || electionCode == 7 || electionCode == 8 || electionCode == 11 || electionCode == 20 ){
+			if(cityCode > 0 && townCode == -1){
+				checkPreviousCityCodeForTownCode(electionId, cityCode);
+			}				
+		} else if ( electionCode == 10 ) { 
+			if(cityCode > 0){ 
+				if(previousCityCode == undefined){
+					previousCityCode = cityCode;
+				}
+
+				if(sggCityCode > 0){ 
+					checkPreviousSggCityCodeForTownCodeFromSgg(electionId, electionCode, sggCityCode);
+					previousSggCityCode = sggCityCode;
+				}
+
+				if(previousCityCode == -1)
+					checkPreviousCityCodeForSggCityCode(electionId, electionCode, cityCode); 
+			}
+		} else if( electionCode == 2 || electionCode == 4 || electionCode == 9 ){
+			if(cityCode > 0){ 
+				if(previousCityCode == undefined){
+					previousCityCode = cityCode;
+				}
+				
+				if(previousCityCode == -1)
+					checkPreviousCityCodeForSggCityCode(electionId, electionCode, cityCode);
+
+				if(sggCityCode > 0){
+					checkPreviousSggCityCodeForTownCodeFromSgg(electionId, electionCode, sggCityCode);
+				}
+			}
+		} else if ( electionCode == 5 || electionCode == 6 ) {
+			if(cityCode > 0){
+				if(townCode > 0){
+					checkPreviousTownCodeForSggTownCodeForGp(electionId, electionCode, townCode);
+				} else {
+					 // 21대 국회의원선거 한정으로 사용한다. 개표단위별 개표 결과에서 전주시 덕진구를 표시하기위해 사용
+					checkPreviousCityCodeForTownCodeBySgForGp(electionId, electionCode, cityCode);
+				}
+			}
+		}
+		settingYN();
+	}
+
+
+	function settingYN(e) {	
+		var electionId = $('#electionId').val();
+		var electionCode = $('#electionCode').val();
+		var cityCode = $('#cityCode').val();
+		var sggCityCode = $('#sggCityCode').val();
+		var townCodeFromSgg =$('#townCodeFromSgg').val();
+		var townCode = $('#townCode').val();
+		var sggTownCode = $('#sggTownCode').val();
+
+		if( electionCode == 1 || electionCode == 3 || electionCode == 7 || electionCode == 8 || electionCode == 11 || electionCode == 20 ){
+			if (cityCode >= 0) {
+				if(townCode >=0 ){
+					selectBoxShow("","none", "none", "", "none", "");
+				} else {
+					selectBoxShow("","none", "none", "", "none", "none");
+				}
+			}else {
+				selectBoxShow("","none", "none", "none", "none", "none");
+			}
+		} else if( electionCode == 10 ){
+			var townCodeFromSggLength = $('#townCodeFromSgg').find('option').length;
+
+			if(townCodeFromSggLength > 2 || electionCode == 10){
+				if(cityCode >= 0){
+					if(sggCityCode >= 0){
+						if(townCodeFromSgg >= 0){
+							selectBoxShow("","", "", "none", "none", "");
+						} else {
+							selectBoxShow("","", "", "none", "none", "none");
+						}
+					} else {
+						selectBoxShow("","", "none", "none", "none", "none");
+					}
+				} else {
+					selectBoxShow("","none", "none","none", "none", "none");
+				}
+			}else{
+
+				if(cityCode >= 0){
+					if(sggCityCode >= 0){
+						selectBoxShow("","", "none", "none", "none", "");
+					}else{
+						selectBoxShow("","", "none", "none", "none", "none");
+					}
+				}else{
+					selectBoxShow("","none", "none", "none", "none", "none");
+				}
+			}
+		} else if( electionCode == 2 || electionCode == 4 || electionCode == 9 ){
+			if(cityCode >= 0){
+				if(sggCityCode >= 0){
+					if(townCodeFromSgg >= 0){
+						selectBoxShow("", "", "","none", "none", "");		
+					} else {
+						selectBoxShow("", "", "","none", "none", "none");
+					}
+				} else {
+					selectBoxShow("", "", "none","none", "none", "none");
+				}
+			} else {
+				selectBoxShow("","none", "none", "none", "none", "none");
+			}
+		} else if( electionCode == 5 || electionCode == 6 ){
+			if(cityCode >= 0){
+				if(townCode >= 0){
+					if(sggTownCode >= 0){
+						selectBoxShow("","none","none", "", "", "");
+					} else {
+						selectBoxShow("","none","none", "", "", "none");
+					}
+				} else {
+					selectBoxShow("","none","none", "", "none", "none");
+				}
+			} else {
+				selectBoxShow("","none","none", "none", "none", "none");
+			}
+		} else {
+			selectBoxShow("none","none","none", "none", "none", "none");
+		}
+		
+		if(electionCode >= 0){
+			$('#wub_select').css('display','');
+		}
+	}
+
+
+	function selectBoxShow(citySpanStyle, sggCitySpanStyle, townCodeFromSggSpanStyle, townSpanStyle, sggTownSpanStyle, submitSpanStyle) {
+		$('#spanCityCode').css('display', citySpanStyle);
+		$('#spanSggCityCode').css('display', sggCitySpanStyle);
+		$('#spanTownCodeFromSgg').css('display', townCodeFromSggSpanStyle);
+		$('#spanTownCode').css('display', townSpanStyle);
+		$('#spanSggTownCode').css('display', sggTownSpanStyle);
+		$('#spanSubmit').css('display', submitSpanStyle);
+	}
+
+
+	function chooseStatementId() {
+		var statementId = "";
+		var electionCode = $('#electionCode').val();
+		var sggTownCode = $('#sggTownCode').val();
+		var sggCityCode = $('#sggCityCode').val();
+		var townCodeFromSgg = $('#townCodeFromSgg').val();
+
+		
+			if(electionCode == "2"){
+				if(sggCityCode == "2530301"){ <!-- 군산시김제시부안군갑 -->
+					statementId = "VCCP08_#00_S";
+				}else if(sggCityCode == "2530901"){ <!-- 군산시김제시부안군을 -->
+					if(townCodeFromSgg == "5303"){ <!-- 군산시만 관내사전 선거구별 -->
+						statementId = "VCCP08_#00_S";
+					}else{
+						statementId = "VCCP08_#00";
+					}
+				}else{
+					statementId = "VCCP08_#00";
+				}
+			}else if(electionCode == "5"){
+				if(sggTownCode == "5290503" || sggTownCode == "5280501" || sggTownCode == "5280502" || sggTownCode == "5412606" || sggTownCode == "5412607" || sggTownCode == "5412608"
+					 || sggTownCode == "5430201" || sggTownCode == "5430202" || sggTownCode == "5430203" || sggTownCode == "5441702" || sggTownCode == "5441703"
+						){
+					statementId = "VCCP08_#00_S";
+				}else{
+					statementId = "VCCP08_#00";
+				}
+			}else{
+				statementId = "VCCP08_#00";
+			}
+		
+		
+		$('#statementId').val(statementId);
+	}
+	
+
+	function changCityCodeSelectBox(electionCode) {
+		var electionId = '0020260603';
+		
+		if(previousCityCode > 0)
+			checkPreviousCityCodeForSgCode(electionId, electionCode, previousCityCode);
+		
+	}
+	
+
+	function setElectionCode(code){
+		$('#wub_select').css('display', '');
+		
+		if(20 == code){
+			$('#electionId'+20).addClass('on').attr('title','선택됨');
+		}else{
+			$('#electionId'+20).removeClass('on').removeAttr('title');
+		};
+		
+		if(3 == code){
+			$('#electionId'+3).addClass('on').attr('title','선택됨');
+		}else{
+			$('#electionId'+3).removeClass('on').removeAttr('title');
+		};
+		
+		if(4 == code){
+			$('#electionId'+4).addClass('on').attr('title','선택됨');
+		}else{
+			$('#electionId'+4).removeClass('on').removeAttr('title');
+		};
+		
+		if(5 == code){
+			$('#electionId'+5).addClass('on').attr('title','선택됨');
+		}else{
+			$('#electionId'+5).removeClass('on').removeAttr('title');
+		};
+		
+		if(6 == code){
+			$('#electionId'+6).addClass('on').attr('title','선택됨');
+		}else{
+			$('#electionId'+6).removeClass('on').removeAttr('title');
+		};
+		
+		if(8 == code){
+			$('#electionId'+8).addClass('on').attr('title','선택됨');
+		}else{
+			$('#electionId'+8).removeClass('on').removeAttr('title');
+		};
+		
+		if(9 == code){
+			$('#electionId'+9).addClass('on').attr('title','선택됨');
+		}else{
+			$('#electionId'+9).removeClass('on').removeAttr('title');
+		};
+		
+		if(11 == code){
+			$('#electionId'+11).addClass('on').attr('title','선택됨');
+		}else{
+			$('#electionId'+11).removeClass('on').removeAttr('title');
+		};
+		
+		if(2 == code){
+			$('#electionId'+2).addClass('on').attr('title','선택됨');
+		}else{
+			$('#electionId'+2).removeClass('on').removeAttr('title');
+		};
+		
+	
+		$('#electionCode').val(code);
+		
+		checkPreviousCityCodeForSgCode($('#electionId').val(), $('#electionCode').val(), '-1');
+		
+		$('#cityCode').val(-1);
+		settingYN();
+	}
+//]]>	
+</script>
+
+
+<div id="container">
+	<div id="container_inner" class="clearfix">
+
+	    <div id="contentarea">
+          
+			<div class="titlearea">
+            	<h3 class="t_VC">투·개표</h3>
+				<div class="r_title">
+				 	<h4>개표단위별 개표결과</h4>
+				 	<ul class="location">
+						<li class="home"><i class="blind">홈</i></li>
+						<li>제9회 전국동시지방선거</li>
+						<li>투·개표</li>
+						<li>개표단위별 개표결과</li>
+					</ul>
+            	</div>
+           	</div>
+           	<div class="bodyarea">
+				<div class="filter">
+			 		<form id="searchForm" action="/electioninfo/electionInfo_report.xhtml" method="post">
+						<input type="hidden" id="electionId" name="electionId" value="0020260603" />
+<input type="hidden" id="requestURI" name="requestURI" value="/electioninfo/0020260603/vc/vccp08.jsp" />
+<input type="hidden" id="topMenuId" name="topMenuId" value='VC' />
+<input type="hidden" id="secondMenuId" name="secondMenuId" value='VCCP08' />
+<input type="hidden" id="menuId" name="menuId" value='VCCP08' />
+<input type="hidden" id="statementId" name="statementId" value="0020260603.VCCP08_#00" />
+						
+						<div class="f_select">
+	                        <dl>
+	                        	<dt>선거</dt>
+		                       	<dd>
+									<a id="electionId3" href="javascript:setElectionCode(3);" class="electionType">시·도지사선거</a>
+										<a id="electionId4" href="javascript:setElectionCode(4);" class="electionType">구·시·군의 장선거</a>
+										<a id="electionId5" href="javascript:setElectionCode(5);" class="electionType">시·도의회의원선거</a>
+										<a id="electionId6" href="javascript:setElectionCode(6);" class="electionType on">구·시·군의회의원선거</a>
+										<a id="electionId8" href="javascript:setElectionCode(8);" class="electionType">광역의원비례대표선거</a>
+										<a id="electionId9" href="javascript:setElectionCode(9);" class="electionType">기초의원비례대표선거</a>
+										<a id="electionId11" href="javascript:setElectionCode(11);" class="electionType">교육감선거</a>
+										<a id="electionId2" href="javascript:setElectionCode(2);" class="electionType">국회의원선거</a>
+										</dd>
+							</dl>
+						</div>
+						
+						<div class="f_search">
+							<dl>
+								<dt>조회조건</dt>
+								<dd>
+									<span id="wub_select" style="display:none;" >
+							            <div class="wub_select1">
+											<select id="electionCode" name="electionCode" style="display:none;" title="조회조건">
+												<option value="-1">▽ 선 택</option>
+												<!-- option value="0" >▷ 전 체</option -->
+												<option value="3" >시·도지사선거</option>
+													<option value="4" >구·시·군의 장선거</option>
+													<option value="5" >시·도의회의원선거</option>
+													<option value="6" selected="selected">구·시·군의회의원선거</option>
+													<option value="8" >광역의원비례대표선거</option>
+													<option value="9" >기초의원비례대표선거</option>
+													<option value="11" >교육감선거</option>
+													<option value="2" >국회의원선거</option>
+													</select>
+											
+											<span id="spanCityCode" style="display:none">
+												<label id='cityCodeLabel' class='label' for="cityCode">시도</label>
+												<select id='cityCode' name='cityCode' >
+													<option class="o_01" value="-1" selected="selected">▽ 선 택</option>
+													<option value='1100' >서울특별시</option>
+													<option value='2600' >부산광역시</option>
+													<option value='2700' >대구광역시</option>
+													<option value='2800' >인천광역시</option>
+													<option value='2900' selected>광주광역시</option>
+													<option value='3000' >대전광역시</option>
+													<option value='3100' >울산광역시</option>
+													<option value='5100' >세종특별자치시</option>
+													<option value='4100' >경기도</option>
+													<option value='5200' >강원특별자치도</option>
+													<option value='4300' >충청북도</option>
+													<option value='4400' >충청남도</option>
+													<option value='5300' >전북특별자치도</option>
+													<option value='4600' >전라남도</option>
+													<option value='4700' >경상북도</option>
+													<option value='4800' >경상남도</option>
+													<option value='4900' >제주특별자치도</option>
+													</select>
+											</span>
+											
+											<span id="spanSggCityCode" style="display:none">
+												<label id='sggCityCodeLabel' class='label' for="sggCityCode">선거구(시도)</label>
+												<select id='sggCityCode' name='sggCityCode'>
+													<option value="-1">▽ 선 택</option>
+													</select>
+											</span>
+											
+											<span id="spanTownCodeFromSgg" style="display:none">
+												<label id='townCodeFromSggLabel' class='label' for="townCodeFromSgg">선거구(구시군)</label>
+												<select id='townCodeFromSgg' name='townCodeFromSgg' >
+													<option value="-1">▽ 선 택</option>					
+													</select>
+											</span>
+											
+											<span id="spanTownCode" style="display:none">
+												<label id='townCodeLabel' class='label' for="townCode">구시군</label>
+												<select id='townCode' name='townCode' >
+													<option value="-1">▽ 선 택</option>
+													</select>
+											</span>
+											
+											<span id="spanSggTownCode" style="display:none">
+												<label id='sggTownCodeLabel' class='label' for="sggTownCode">선거구(구시군)</label>
+												<select id='sggTownCode' name='sggTownCode'>
+													<option value="-1">▽ 선 택</option>					
+													</select>
+											</span>
+										
+				                       		<span id="spanCityCode" style="display:none;" >
+												<label id="cityCodeLabel" class="label" for="checkCityCode">시도</label>
+												<select id="checkCityCode" name="checkCityCode" style="display:none;">
+													<option value="-1">▽ 선 택</option>				
+													<option value="1100">서울특별시</option>					
+													<option value="2600">부산광역시</option>					
+													<option value="2700">대구광역시</option>					
+													<option value="2800">인천광역시</option>					
+													<option value="2900">광주광역시</option>					
+													<option value="3000">대전광역시</option>					
+													<option value="3100">울산광역시</option>					
+													<option value="5100">세종특별자치시</option>					
+													<option value="4100">경기도</option>					
+													<option value="5200">강원특별자치도</option>					
+													<option value="4300">충청북도</option>					
+													<option value="4400">충청남도</option>					
+													<option value="5300">전북특별자치도</option>					
+													<option value="4600">전라남도</option>					
+													<option value="4700">경상북도</option>					
+													<option value="4800">경상남도</option>					
+													<option value="4900">제주특별자치도</option>					
+													</select>
+											</span>
+											
+											<span id="spanSubmit" style="display:none">
+												<!-- 210813_ 수정 : 검색버튼 src 수정. -->
+												<input type="image" src="../../common/images/renewal/btn_search.png?ver=240325" alt="검색" title="검색" />
+											</span>
+										</div>
+									</span>
+								</dd>
+							</dl>
+						</div>
+					</form>
+				</div>
+				
+				<div class="searchResult">
+						<div class="result_top">
+							<h5>결과보기</h5>
+							<p class="selectCondition">
+								<span id="electionName"></span>
+								<span id="cityName"></span>
+								 <span id="townName"></span>
+                                <span id="sggCityName"></span>
+								<span id="sggTownName"></span>
+								<span id="townNameFromSgg"></span>
+								<br/>
+								<div class="guide_txt mt5">
+								
+									개표 및 집계가 완료된 자료만 조회되며, 선거인수는 총선거인수가 아닌 개표가 완료된 선거인수가 표시됩니다.<br/>
+									
+									잘못 투입·구분된 투표지는 다른 투표구의 투표지 등이 발견되어 별도 개표한 경우에만 그 득표수 등이 표시됩니다.<br/>
+									
+								 		관내사전투표는 해당 읍·면·동 사전투표소에서 관내사전투표한 수입니다.<br/>
+										※ 관내‧관외 사전투표 구분기준 : 해당 자치구ㆍ시ㆍ군의원지역선거구(세종특별자치시와 제주특별자치도는 시ㆍ도의원지역선거구)
+								 	
+									 
+									</div>
+							</p>
+							<div class="r_btn">
+								<a href="#" class="dt_print" title="Print download">Print</a>
+								<a href="#" class="dt_down" title="HWP download">HWP</a>
+								<a href="#" class="dt_down" title="PDF download">PDF</a>
+								<a href="#" class="dt_down" title="XLS download">XLS</a>
+							</div>
+						</div>
+						
+						<div class="cont_table">
+						<table id="table01" class="table01" bgcolor="#FFFFFF">
+						<caption>개표단위별 개표결과에 대한 표이며 읍면동명, 투표구명, 선거인수, 투표수, 후보자별 득표수, 무효 투표수, 기권자수 정보 제공</caption>
+								<thead>
+								<tr>
+								<th class="firstTh"  rowspan="2" width="75">읍면동명</th>
+									<th rowspan="2" width="75">구분</th>
+									<th rowspan="2">선거인수</th>
+												<th rowspan="2">투표수</th>
+											<th  colspan="1">후보자별 득표수</th>
+											<th rowspan="2">무효<br/>투표수</th>
+													<th rowspan="2">기권자수</th>
+												</tr>
+								<tr>
+									<th >계</th>
+												</tr>
+								</thead>
+								
+								<tbody>
+									<tr><td colspan="7" class="alignC">검색된 결과가 없습니다.</td></tr>
+											</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+</div>
+<div id="footer">
+	<div class="footmu">
+		<ul>
+			<li><a href="/search/searchCandidate.xhtml">통합검색</a></li>
+			<li><a href="/main/help/helpMenu.xhtml?selectedName=privacypolicy" class="bold">개인정보 처리방침</a></li>
+			<li><a href="/main/help/helpMenu.xhtml?selectedName=copyrightpolicy">이용지침</a></li>
+<li><a href="/main/help/helpMenu.xhtml?selectedName=faq">FAQ</a></li>
+			<li><a href="/main/help/helpMenu.xhtml?selectedName=byelection">재보궐선거 실시사유 확정상황</a></li>
+		</ul>
+		<div class="footsite">
+			<select id="sitelink" name="sitelink" title="관련사이트 선택 이동">
+				<option value="">관련사이트</option>
+               	<option value="http://www.nec.go.kr">중앙선거관리위원회홈페이지</option>
+               	<option value="http://data.nec.go.kr/">국가선거정보 개방포털시스템</option>
+               	<option value="http://ok.nec.go.kr">재외선거홈페이지</option>
+               	<option value="http://policy.nec.go.kr">정책ㆍ공약마당</option>
+               	<option value="http://ova.nec.go.kr">재외선거 인터넷 신고ㆍ신청</option>
+			</select> 
+			<a href="javascript:fn_siteGo();" title="관련사이트 이동(새창열림)" class="site_go_btn"><span class="blind">이동</span></a>
+			</div>
+	</div>
+	<!-- 210812_ 추가 : [.copyright_bg] 태그 추가. -->
+	<div class="copyright_bg">
+		<div class="copyright">
+			<p class="footlogo">
+				<span class="blind">중앙선거관리위원회</span>
+			</p>
+			<!-- 210813_ 수정 : [.copyright] 내용 변경. -->
+			<p class="address">[13809] 경기도 과천시 홍촌말로 44 중앙선거관리위원회 대표전화 : 02-503-1114 / 선거 법질의·신고제보 : 국번없이 <span>1390</span><br>COPYRIGHT © National Election Commission, All Rights Reserved. 본 사이트는 IE9 이상, 크롬에 최적화 되어 있습니다.</p>
+			<p class="callcenter">
+				<span>선거법안내 선거범죄신고 선거콜센터 1390</span>
+			</p>
+		</div>
+	</div>
+	</div>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		if ('2900' == '1' || '-1' == '1') {
+			fn_selectElment('2900', '-1', '');
+		} else {
+			if ('' == 'true') {
+				fn_triggerFuncton();
+			}
+		}
+	});
+
+	function fn_triggerFuncton() {
+		$("#spanSubmit").children("input[type=image]").trigger("click");
+	}
+
+	function fn_selectElment(cityCode, town, searchAction) {
+		if (cityCode == '1') {
+			$("#cityCode").children("option:first").attr("selected", "selected");
+			if ($("#cityCode").children("option:first").val() == "-1") {
+				$("#cityCode").unbind("change");
+				$("#cityCode").children("option:eq(1)").attr("selected", "selected");
+			}
+		}else{
+			$("#cityCode").unbind("change");
+		}
+		if (town == '1') {
+			fn_getTownCode($("#cityCode").val(), searchAction);
+		} else {
+			if (searchAction == 'true') {
+				fn_triggerFuncton();
+			}
+		}
+	}
+
+	function fn_getTownCode(cityVal, searchAction) {
+		var locationStr = '', params = '';
+		if ($("#electionId").val() == '0000000000') {
+			locationStr = '/bizcommon/selectbox/selectbox_townCodeBySgJson_Old.json';
+			if ('' == '0') {
+				locationStr = '/bizcommon/selectbox/selectbox_townCodeBySgJson_GuOld.json';
+			}
+			params = {
+				electionId : $('#electionId').val(),
+				electionCode : $('#electionName').val(),
+				cityCode : cityVal,
+				subElectionCode : $('#electionCode').val()
+			}
+		} else {
+			locationStr = '/bizcommon/selectbox/selectbox_townCodeJson.json';
+			params = {
+				electionId : $('#electionId').val(),
+				cityCode : cityVal
+			}
+
+		}
+
+		$.getJSONTE(locationStr, params, function(response, status) {
+			var townCodeList = response;
+			var townCodeEl = $('#townCode');
+			var option = '';
+			$('#townCode option').filter(function() {
+				$value = $(this).val();
+				if ($value > 0)
+					return this;
+			}).remove();
+			// townCode 옵션 추가
+			for (var i = 0; i < townCodeList.length; i++) {
+				if (i == 0) {
+
+					if (townCodeList[0].CODE == '-1') {
+						option = $('<option>').attr('value',
+								townCodeList[0].CODE)
+								.html(townCodeList[0].NAME);
+						option = $('<option>').attr('value',
+								townCodeList[1].CODE).attr('selected',
+								"selected").html(townCodeList[1].NAME);
+						i++;
+					} else {
+						option = $('<option>').attr('value',
+								townCodeList[0].CODE).attr('selected',
+								"selected").html(townCodeList[0].NAME);
+					}
+				} else {
+					option = $('<option>').attr('value', townCodeList[i].CODE)
+							.html(townCodeList[i].NAME);
+				}
+				option.appendTo(townCodeEl);
+			}
+			previousCityCode = cityVal;
+			if (searchAction == 'true') {
+				fn_triggerFuncton();
+			}
+		});
+	}
+	//210813_ 추가 : 관련사이트 이동 스크립트 수정.
+	//<[CDATA[
+	$(function() {
+
+	/*  $('#sitelink').change(function() {
+			if ($('#sitelink').val() != '') {
+				window.open($('#sitelink').val(), '_blank');
+				$('#sitelink').val('').prop("selected", true);
+			}
+		}); */
+	});
+
+	//230912_ 추가 : 관련사이트 이동 스크립트 수정
+	function fn_siteGo(){		
+		var selectedVal = $('#sitelink').val();
+		if (selectedVal != '') {
+			window.open(selectedVal, '_blank');
+			$('#sitelink').val('');
+		} else {
+	    	alert('관련 사이트를 선택해 주세요.');
+	    	$('#sitelink').focus();
+	    }
+	}
+	//]]>
+</script></div>
+</div>
+<script type="text/javascript">
+	
+	var rTitle = "",selectCondition="",tabledata="";fTitle="";
+
+	$(document).bind("contextmenu",function(e){
+		return false;
+	});
+
+	function fn_chkUbiData(){
+		var eleName = '제9회 전국동시지방선거';
+		var electionId = '0020260603';
+		if(electionId == '0000000000'){
+			rTitle = $(".r_title h4").text();
+		}else{
+			rTitle = "["+ eleName + "] " + $(".r_title h4").text();
+		}
+		 selectCondition = $(".selectCondition:first span").text();
+		 fTitle = rTitle + selectCondition;
+		 tabledata = $(".searchResult").find("table:first").clone().wrapAll("<div/>").parent().html();
+		 //tabledata = $(".searchResult").find("table:first").parent().html();
+	}
+	
+ function fn_chkUbiReportBtn(){
+	 
+	 if($(".searchResult .result_top").length>0 && $(".searchResult .result_top .r_btn").length>0){
+		 $(".searchResult .result_top .r_btn").remove();
+	 }
+
+	 
+	 if($(".searchResult .result_top").length>0 && $(".searchResult .result_top .r_btn").length==0){
+		
+		 
+		 fn_chkUbiData();
+		 
+		 
+			$.each($(".searchResult .result_top"),function(index,divEl){
+		 	var div = document.createElement("div");
+		 		div.className="r_btn";	
+				$(divEl).append(div);
+				for(var i=0; i<3; i++){
+					$(divEl).find(".r_btn").append(document.createElement("a"));
+				}
+				
+				$(divEl).find(".r_btn a").eq(0).attr("href","javascript:void(0);").attr("class","dt_down").attr("onclick","go_Report('HWP');").attr("title","HWP download").text("HWP");
+				$(divEl).find(".r_btn a").eq(1).attr("href","javascript:void(0);").attr("class","dt_down").attr("onclick","go_Report('PDF');").html("<span class='blind'>PDF 다운로드</span>");
+				$(divEl).find(".r_btn a").eq(2).attr("href","javascript:void(0);").attr("class","dt_down").attr("onclick","go_Report('XLS');").html("<span class='blind'>엑셀 다운로드</span>");
+
+				
+				
+				if(typeof(RBtnRemoveList) != "undefined"){
+					$.each($(divEl).find(".r_btn a"), function(index,aEl){
+						$.each(RBtnRemoveList, function(secIndex,removeTargetText){
+							if($(aEl).text() == removeTargetText){
+								$(aEl).remove();
+							}
+						});
+					});
+				}
+
+				
+
+				$(".r_btn").show();
+			});
+		
+		fn_chkColGroup();
+	 }
+ }
+ 
+ 
+  function fn_chkColGroup(){
+	  $.each($("table"),function(index,tableEl){
+		if($(tableEl).find("col").length != $(tableEl).find("td:first").parent().children("td").length){
+			
+			if($(tableEl).find("colgroup").length == 0){
+				$(tableEl).prepend(document.createElement("colgroup"));
+			}
+
+			
+			var parentDisNone = false;
+			
+			var colLength = $(tableEl).find("col").length;
+			
+			var colGroup = $(tableEl).find("colgroup");
+
+			if($(tableEl).parent().css("display")=="none"){
+				parentDisNone = true;
+				$(tableEl).parent().css("display","block");
+			}
+
+			
+			if($(tableEl).find("td:first").parent().children("td").length >1){
+				$.each($(tableEl).find("td:first").parent().children("td"),function(tdIndex,tdEl){
+					if(colLength < tdIndex+1){
+					colGroup.append(document.createElement("col"));
+					
+					colGroup.children("col").eq(tdIndex).attr("width","auto");
+					}
+				});
+			}else{
+				$.each($(tableEl).find("th:last").parent().children("th"),function(thIndex,thEl){
+					if(colLength < thIndex+1){
+					colGroup.append(document.createElement("col"));
+					
+					colGroup.children("col").eq(thIndex).attr("width","auto");
+					}
+				});
+			}
+
+		if($(tableEl).parent().css("display") != "none" && parentDisNone == true){
+			$(tableEl).parent().css("display","none");
+			}
+		}
+	});
+  }
+	$(document).ready(function(){
+		fn_chkUbiReportBtn();
+
+		// table 사이즈(width)가 기준 width와 같지 않을 경우, 출력을 위해 사이즈(width) 지정
+		if( parseInt($("#table01").width()) > 1050)
+		{
+			$("#table01").css("width", parseInt($("#table01").width()));
+		} else {
+			$("#table01").css("width", 1050);
+		}
+	});
+</script>
+</body>
+</html>
