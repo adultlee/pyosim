@@ -165,6 +165,9 @@ def _analyze_local():
         if len(locations) < 2:
             continue
         candidates = bucket_key[-2:]
+        # 두 후보가 모두 0표인 쌍은 의미 없는 노이즈이므로 제외
+        if any(score == 0 for _, score in candidates):
+            continue
         rank = bucket_key[-3]
         prefix_part = bucket_key[:-3]
         선거종류 = prefix_part[1]
@@ -242,6 +245,9 @@ def _analyze_assembly():
         if len(locations) < 2:
             continue
         candidates = bucket_key[-2:]
+        # 두 후보가 모두 0표인 쌍은 의미 없는 노이즈이므로 제외
+        if any(score == 0 for _, score in candidates):
+            continue
         rank = bucket_key[-3]
         prefix_part = bucket_key[:-3]
         선거구분 = prefix_part[1]
@@ -310,6 +316,9 @@ def _analyze_presidential():
         if len(locations) < 2:
             continue
         candidates = bucket_key[-2:]
+        # 두 후보가 모두 0표인 쌍은 의미 없는 노이즈이므로 제외
+        if any(score == 0 for _, score in candidates):
+            continue
         rank = bucket_key[-3]
         회차, level = bucket_key[:2]
         votes_map = {cand: score for cand, score in candidates}
