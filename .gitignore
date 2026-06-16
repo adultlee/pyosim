@@ -15,6 +15,7 @@ web/dist/
 # python
 __pycache__/
 .venv/
+.venv-win/
 .pytest_cache/
 
 # editor / tooling
@@ -24,6 +25,5 @@ __pycache__/
 data_raw/
 data_processed/
 
-# large data outputs (로컬 전용 — git에서 제외)
-web/public/twin_votes_*.json
+# large data outputs
 zip/

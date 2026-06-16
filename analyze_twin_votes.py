@@ -38,6 +38,10 @@ SIDO_WIDE_RACES = {"시도지사", "광역비례", "교육감"}
 
 OUT_DIR = "web/public"
 
+# 최소 일치 투표구 수: 2개(최솟값)이면 파일이 수 GB가 됨.
+# 3 이상으로 설정하면 파일 크기가 크게 줄고, 더 주목할 만한 사례만 남는다.
+MIN_TWIN_COUNT = 3
+
 
 def _rank_pair_buckets(cands: list, prefix: tuple, location_entry: dict,
                        buckets: defaultdict) -> None:
@@ -330,7 +334,6 @@ def _write_election(election_key, round_field, twins):
         by_round[twin["group"][round_field]].append(twin)
 
     rounds = sorted(by_round.keys(), key=lambda r: str(r))
-    counts = {str(r): len(by_round[r]) for r in rounds}
     round_labels = {}
     for r in rounds:
         if election_key == "지방선거":
@@ -340,12 +343,16 @@ def _write_election(election_key, round_field, twins):
         else:
             round_labels[str(r)] = f"제{r}대"
 
+    counts = {}
     for r in rounds:
+        filtered = [t for t in by_round[r] if t["count"] >= MIN_TWIN_COUNT]
+        counts[str(r)] = len(filtered)
         safe_r = str(r).replace(" ", "_")
         path = f"{OUT_DIR}/twin_votes_{election_key}_{safe_r}.json"
         with open(path, "w", encoding="utf-8") as out_file:
-            json.dump({"twins": by_round[r]}, out_file, ensure_ascii=False)
-        print(f"  → {path} ({len(by_round[r]):,}개)")
+            json.dump({"twins": filtered}, out_file, ensure_ascii=False)
+        total = len(by_round[r])
+        print(f"  → {path} ({len(filtered):,}개 / 전체 {total:,}개)")
 
     return {"rounds": [str(r) for r in rounds], "counts": counts, "roundLabels": round_labels}
 
