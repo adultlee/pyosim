@@ -4,6 +4,7 @@ import TwinVoteViewer from './components/TwinVoteViewer'
 import About from './components/About'
 import Landing from './components/Landing'
 import HeroTrend from './components/HeroTrend'
+import AnimatedNumber from './components/AnimatedNumber'
 import { computeRoundStats } from './twinStats'
 import { partyColor } from './partyColor'
 import type { TwinData, TwinIndex, VotesCsvIndex } from './types'
@@ -177,20 +178,23 @@ export default function App() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
               <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>{roundLabel} 쌍둥이 후보쌍</div>
-              <div className="font-mono tabular-nums text-2xl font-bold mt-0.5" style={{ color: 'var(--color-accent)' }}>
-                {cardStats.pairCount.toLocaleString()}<span className="text-sm font-normal" style={{ color: 'var(--color-text-tertiary)' }}> 쌍</span>
+              <div className="flex items-baseline mt-0.5" style={{ color: 'var(--color-accent)' }}>
+                <AnimatedNumber value={cardStats.pairCount} className="font-mono tabular-nums text-2xl font-bold" />
+                <span className="text-sm font-normal" style={{ color: 'var(--color-text-tertiary)' }}> 쌍</span>
               </div>
             </div>
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
               <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>동일 득표 사례</div>
-              <div className="font-mono tabular-nums text-2xl font-bold mt-0.5" style={{ color: 'var(--color-text)' }}>
-                {cardStats.groupCount.toLocaleString()}<span className="text-sm font-normal" style={{ color: 'var(--color-text-tertiary)' }}> 건</span>
+              <div className="flex items-baseline mt-0.5" style={{ color: 'var(--color-text)' }}>
+                <AnimatedNumber value={cardStats.groupCount} className="font-mono tabular-nums text-2xl font-bold" />
+                <span className="text-sm font-normal" style={{ color: 'var(--color-text-tertiary)' }}> 건</span>
               </div>
             </div>
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
               <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>일치한 투표소 총합</div>
-              <div className="font-mono tabular-nums text-2xl font-bold mt-0.5" style={{ color: 'var(--color-text)' }}>
-                {cardStats.totalLocations.toLocaleString()}<span className="text-sm font-normal" style={{ color: 'var(--color-text-tertiary)' }}> 곳</span>
+              <div className="flex items-baseline mt-0.5" style={{ color: 'var(--color-text)' }}>
+                <AnimatedNumber value={cardStats.totalLocations} className="font-mono tabular-nums text-2xl font-bold" />
+                <span className="text-sm font-normal" style={{ color: 'var(--color-text-tertiary)' }}> 곳</span>
               </div>
             </div>
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>

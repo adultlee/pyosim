@@ -1,19 +1,24 @@
 import type { TwinData } from './types'
 
+export type PairEntry = { names: [string, string]; parties: [string?, string?]; locations: number }
+
 export type RoundStats = {
   pairCount: number       // 서로 다른 후보쌍 수
   totalLocations: number  // 모든 사례의 일치 투표소 합
   groupCount: number      // 득표값까지 같은 사례(쌍둥이 그룹) 수
-  topPair: { names: [string, string]; parties: [string?, string?]; locations: number } | null
+  topPair: PairEntry | null      // = topPairs[0] (하위호환)
+  topPairs: PairEntry[]          // 일치 투표소 합 내림차순 상위 N
 }
+
+const TOP_PAIRS_LIMIT = 5
 
 // 로드된 회차 JSON을 후보쌍 기준으로 집계해 hero용 수치를 낸다.
 // (TwinVoteViewer의 묶음 키와 동일 규칙: category + group + rank_pair + 후보쌍이름)
 export function computeRoundStats(data: TwinData | null): RoundStats {
-  const empty: RoundStats = { pairCount: 0, totalLocations: 0, groupCount: 0, topPair: null }
+  const empty: RoundStats = { pairCount: 0, totalLocations: 0, groupCount: 0, topPair: null, topPairs: [] }
   if (!data) return empty
 
-  const byKey = new Map<string, { names: [string, string]; parties: [string?, string?]; locations: number }>()
+  const byKey = new Map<string, PairEntry>()
   let totalLocations = 0
 
   for (const group of data.twins) {
@@ -35,15 +40,15 @@ export function computeRoundStats(data: TwinData | null): RoundStats {
     }
   }
 
-  let topPair: RoundStats['topPair'] = null
-  for (const entry of byKey.values()) {
-    if (topPair == null || entry.locations > topPair.locations) topPair = entry
-  }
+  const topPairs = [...byKey.values()]
+    .sort((left, right) => right.locations - left.locations)
+    .slice(0, TOP_PAIRS_LIMIT)
 
   return {
     pairCount: byKey.size,
     totalLocations,
     groupCount: data.twins.length,
-    topPair,
+    topPair: topPairs[0] ?? null,
+    topPairs,
   }
 }

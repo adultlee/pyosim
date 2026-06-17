@@ -92,9 +92,12 @@ function CaseRow({ group, first, second, showSido }: {
   const hiddenCount = group.locations.length - visibleLocations.length
 
   return (
-    <div style={{ borderTop: '1px solid var(--color-border)' }}>
-      {/* 사례 헤더: 득표값 = 득표값 · 반복 횟수 배지 */}
-      <div className="px-4 py-2.5 flex items-center gap-2.5 flex-wrap">
+    <div
+      className="px-4 py-3 flex flex-col sm:flex-row sm:items-start gap-x-4 gap-y-2"
+      style={{ borderTop: '1px solid var(--color-border)' }}
+    >
+      {/* 왼쪽: 득표값 = 득표값 · 반복 배지 (고정폭) */}
+      <div className="flex items-center gap-2 shrink-0 sm:w-44">
         <span className="font-mono tabular-nums font-semibold text-base" style={{ color: 'var(--color-text)' }}>
           {group.votes[first]?.toLocaleString()}
         </span>
@@ -102,55 +105,51 @@ function CaseRow({ group, first, second, showSido }: {
         <span className="font-mono tabular-nums font-semibold text-base" style={{ color: 'var(--color-text)' }}>
           {second != null ? group.votes[second]?.toLocaleString() : ''}
         </span>
-        <span className="px-2 py-0.5 rounded-md font-mono text-xs" style={countBadgeStyle(group.count)}>
-          🔁 {group.count.toLocaleString()}곳
-        </span>
       </div>
 
-      {/* 일치 동 3컬럼 그리드 */}
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-        style={{ borderTop: '1px solid var(--color-border)', gap: '1px', backgroundColor: 'var(--color-border)' }}
-      >
-        {visibleLocations.map((loc, locIdx) => (
-          <div key={locIdx} className="px-4 py-2.5" style={{ backgroundColor: 'var(--color-surface)' }}>
-            <div className="text-sm flex items-baseline gap-1.5">
-              <span style={{ color: 'var(--color-text)' }}>{loc['읍면동']}</span>
-              {showSido && loc['시도'] && (
-                <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>{loc['시도']}</span>
-              )}
-              {!showSido && loc['구시군'] && (
-                <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>{loc['구시군']}</span>
-              )}
-            </div>
-            <div className="text-xs font-mono tabular-nums mt-1" style={{ color: 'var(--color-text-secondary)' }}>
-              {group.votes[first]?.toLocaleString()} = {second != null ? group.votes[second]?.toLocaleString() : ''}
-              {typeof loc['투표수'] === 'number' && (
-                <span style={{ color: 'var(--color-text-tertiary)' }}> · 투표 {loc['투표수'].toLocaleString()}중</span>
-              )}
-            </div>
-          </div>
-        ))}
+      {/* 오른쪽: 일치 투표소를 정렬된 표로 (읍면동 | 지역 | 투표수 | 두 후보% | 1위) */}
+      <div className="flex-1 min-w-0">
+        <div className="flex flex-col">
+          {visibleLocations.map((loc, locIdx) => {
+            const turnout = typeof loc['투표수'] === 'number' ? loc['투표수'] : undefined
+            const pairSum = (group.votes[first] ?? 0) + (second != null ? group.votes[second] ?? 0 : 0)
+            const pairPct = turnout ? (pairSum / turnout) * 100 : undefined
+            const winner = typeof loc['1위'] === 'string' ? (loc['1위'] as string) : undefined
+            return (
+              <div
+                key={locIdx}
+                className="grid items-baseline gap-x-3 py-1 text-sm"
+                style={{ gridTemplateColumns: 'minmax(0,1fr) auto auto auto' }}
+              >
+                <span className="truncate">
+                  <span style={{ color: 'var(--color-text)' }}>{loc['읍면동']}</span>{' '}
+                  <span className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
+                    {showSido ? loc['시도'] : loc['구시군']}
+                  </span>
+                </span>
+                <span className="font-mono tabular-nums text-xs text-right" style={{ color: 'var(--color-text-secondary)' }}>
+                  {turnout != null ? `${turnout.toLocaleString()}표` : ''}
+                </span>
+                <span className="font-mono tabular-nums text-xs text-right" style={{ color: 'var(--color-text-tertiary)' }}>
+                  {pairPct != null ? `두 후보 ${pairPct.toFixed(1)}%` : ''}
+                </span>
+                <span className="text-xs text-right" style={{ color: 'var(--color-text-tertiary)' }}>
+                  {winner ? `1위 ${winner}` : ''}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+        {(hiddenCount > 0 || (expanded && group.locations.length > GRID_PREVIEW)) && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="mt-1 text-xs"
+            style={{ color: expanded ? 'var(--color-text-tertiary)' : 'var(--color-accent)' }}
+          >
+            {expanded ? '접기 ▴' : `나머지 ${hiddenCount.toLocaleString()}곳 더보기 ▾`}
+          </button>
+        )}
       </div>
-
-      {hiddenCount > 0 && (
-        <button
-          onClick={() => setExpanded(true)}
-          className="w-full py-2 text-xs transition-colors"
-          style={{ borderTop: '1px solid var(--color-border)', color: 'var(--color-accent)' }}
-        >
-          나머지 {hiddenCount.toLocaleString()}곳 더보기 ▾
-        </button>
-      )}
-      {expanded && group.locations.length > GRID_PREVIEW && (
-        <button
-          onClick={() => setExpanded(false)}
-          className="w-full py-2 text-xs transition-colors"
-          style={{ borderTop: '1px solid var(--color-border)', color: 'var(--color-text-tertiary)' }}
-        >
-          접기 ▴
-        </button>
-      )}
     </div>
   )
 }
