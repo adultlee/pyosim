@@ -38,3 +38,41 @@ def write_round_gzip(df_round, out_path):
     with gzip.open(out_path, "wb") as handle:
         handle.write(csv_bytes)
     return os.path.getsize(out_path)
+
+
+def split_one(source_csv_name, source_path, out_dir):
+    """한 소스 CSV 를 회차별 gz 로 굽고 매니페스트 조각을 반환."""
+    election_label = ELECTION_NAME_MAP[source_csv_name]
+    df = pd.read_csv(source_path, dtype=str)
+    df["선거_회차"] = df["선거_회차"].astype(str)
+    manifest = {}
+    for round_value, df_round in df.groupby("선거_회차"):
+        key = round_key(round_value)
+        file_name = f"votes_{election_label}_{key}.csv.gz"
+        out_path = os.path.join(out_dir, file_name)
+        size = write_round_gzip(df_round, out_path)
+        if size >= SIZE_LIMIT_BYTES:
+            print(f"  ⚠️ {file_name}: {size / 1024 / 1024:.1f}MB (100MB 초과!)")
+        manifest[key] = {"file": file_name, "rows": int(len(df_round)), "bytes": int(size)}
+    return manifest
+
+
+def main():
+    os.makedirs(OUT_DIR, exist_ok=True)
+    full_manifest = {}
+    for source_csv_name, source_path in SOURCE_FILES.items():
+        if not os.path.exists(source_path):
+            print(f"건너뜀 (원본 없음): {source_path}")
+            continue
+        election_label = ELECTION_NAME_MAP[source_csv_name]
+        print(f"분할: {source_path} → {election_label}")
+        full_manifest[election_label] = split_one(source_csv_name, source_path, OUT_DIR)
+        for key, meta in sorted(full_manifest[election_label].items()):
+            print(f"  {key}: {meta['rows']:,}행 → {meta['bytes'] / 1024 / 1024:.1f}MB")
+    with open(MANIFEST_PATH, "w", encoding="utf-8") as handle:
+        json.dump(full_manifest, handle, ensure_ascii=False, indent=1)
+    print(f"매니페스트: {MANIFEST_PATH}")
+
+
+if __name__ == "__main__":
+    main()
