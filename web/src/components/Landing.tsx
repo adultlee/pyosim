@@ -139,7 +139,7 @@ export default function Landing({ index, electionKeys, onPickElection }: Props) 
             className="text-lg leading-snug pl-3"
             style={{ ...serif, borderLeft: '3px solid var(--color-text)', color: 'var(--color-text)' }}
           >
-            "한 번은 우연,<br />— 여러 번은 무엇일까?"
+            "드문 일일까, 흔한 일일까?<br />— 직접 헤아려보자."
           </blockquote>
           <div
             className="rounded-lg px-4 py-5 text-center"
