@@ -175,6 +175,49 @@ def _normalize_emd_local(eupmd):
     return name
 
 
+def _enrich_location(location_entry, vote_by_id, turnout):
+    """location에 그 투표소의 1위 후보·투표수·선거인수를 채운다.
+
+    vote_by_id: {식별자: 합산득표} — 1위는 최다 득표(동점 시 첫 등장 유지).
+    turnout: {"투표수": int, "선거인수": int} 또는 None.
+    """
+    if vote_by_id:
+        top = max(vote_by_id.items(), key=lambda kv: kv[1])
+        location_entry["1위"] = top[0]
+        location_entry["1위득표"] = top[1]
+    if turnout:
+        location_entry["투표수"] = turnout["투표수"]
+        if "선거인수" in turnout:
+            location_entry["선거인수"] = turnout["선거인수"]
+
+
+def _emd_turnout_map(df, group_keys, dedup_col):
+    """정규화 읍면동별 총 투표수·선거인수 매핑.
+
+    group_keys: 읍면동을 식별하는 컬럼 목록 (예: [회차, 선거종류, 시도, 구시군, _emd_norm, level]).
+    dedup_col: 같은 투표구를 식별하는 원본 컬럼(예: 읍면동/투표구). 후보 행마다
+      투표수가 중복되므로, 투표구별로 한 행만 남긴 뒤 group_keys로 합산한다.
+    반환: {tuple(group_keys 값): {"투표수": int, "선거인수": int}}
+    """
+    cols = list(group_keys) + [dedup_col]
+    has_voters = "선거인수" in df.columns
+    agg_cols = ["투표수"] + (["선거인수"] if has_voters else [])
+    sub = df[cols + agg_cols].copy()
+    for col in agg_cols:
+        sub[col] = pd.to_numeric(sub[col], errors="coerce")
+    # 투표구 단위로 한 행만 (후보 행 중복 제거) → group_keys로 합산
+    per_precinct = sub.drop_duplicates(subset=cols)
+    grouped = per_precinct.groupby(list(group_keys))[agg_cols].sum()
+    result: dict = {}
+    for key, row in grouped.iterrows():
+        key_tuple = key if isinstance(key, tuple) else (key,)
+        entry = {"투표수": int(row["투표수"])}
+        if has_voters:
+            entry["선거인수"] = int(row["선거인수"])
+        result[key_tuple] = entry
+    return result
+
+
 def _analyze_local():
     print("\n[지방선거] 읽는 중...")
     df = pd.read_csv("data_processed/지방선거.csv", low_memory=False)
@@ -199,6 +242,12 @@ def _analyze_local():
             df["읍면동"], df["시도"], df["구시군"], df["선거종류"]
         )
     ]
+
+    # 정규화 읍면동별 총 투표수: 원본 읍면동(=투표구)별 투표수를 한 번씩만 더한다.
+    # (같은 투표구의 여러 후보 행은 투표수가 동일하므로 중복을 제거해 합산.)
+    turnout_map = _emd_turnout_map(
+        df, ["선거_회차", "선거종류", "시도", "구시군", "_emd_norm", "level"], "읍면동"
+    )
 
     precinct_cols = ["선거_회차", "선거종류", "시도", "구시군", "_emd_norm", "level"]
     sorted_df = df.sort_values(precinct_cols, kind="stable")
@@ -225,6 +274,8 @@ def _analyze_local():
             vote_by_id[identifier] = vote_by_id.get(identifier, 0) + int(votes_list[i])
         cands = list(vote_by_id.items())
         location_entry = {"구시군": 구시군, "읍면동": 읍면동}
+        _enrich_location(location_entry, vote_by_id,
+                         turnout_map.get(key_tuples[group_start]))
         if 선거종류 in SIDO_WIDE_RACES:
             sido_key = sido_group_map.get((int(회차), 선거종류, 시도), 시도)
             prefix = (int(회차), 선거종류, sido_key, level)
@@ -288,6 +339,8 @@ def _analyze_assembly():
     print(f"  {len(df):,}행")
 
     precinct_cols = ["선거_회차", "선거구분", "선거구명", "시도", "구시군", "읍면동", "level"]
+    dedup_col = "투표구" if "투표구" in df.columns else "읍면동"
+    turnout_map = _emd_turnout_map(df, precinct_cols, dedup_col)
     sorted_df = df.sort_values(precinct_cols, kind="stable")
     key_columns = [sorted_df[col].tolist() for col in precinct_cols]
     identifier_list = sorted_df["식별자"].tolist()
@@ -312,6 +365,8 @@ def _analyze_assembly():
             vote_by_id[identifier] = vote_by_id.get(identifier, 0) + int(votes_list[i])
         cands = list(vote_by_id.items())
         location_entry = {"구시군": 구시군, "읍면동": _restore_middot(읍면동)}
+        _enrich_location(location_entry, vote_by_id,
+                         turnout_map.get(key_tuples[group_start]))
         if 선거구분 == "지역구":
             prefix = (회차, 선거구분, 선거구명, level)
         else:
@@ -368,6 +423,8 @@ def _analyze_presidential():
     print(f"  {len(df):,}행")
 
     precinct_cols = ["선거_회차", "시도", "구시군", "읍면동", "level"]
+    dedup_col = "투표구" if "투표구" in df.columns else "읍면동"
+    turnout_map = _emd_turnout_map(df, precinct_cols, dedup_col)
     sorted_df = df.sort_values(precinct_cols, kind="stable")
     key_columns = [sorted_df[col].tolist() for col in precinct_cols]
     identifier_list = sorted_df["식별자"].tolist()
@@ -392,6 +449,8 @@ def _analyze_presidential():
             vote_by_id[identifier] = vote_by_id.get(identifier, 0) + int(votes_list[i])
         cands = list(vote_by_id.items())
         location_entry = {"시도": 시도, "구시군": 구시군, "읍면동": _restore_middot(읍면동)}
+        _enrich_location(location_entry, vote_by_id,
+                         turnout_map.get(key_tuples[group_start]))
         prefix = (int(회차), level)
         _rank_pair_buckets(cands, prefix, location_entry, buckets)
         group_start = row_index
@@ -423,6 +482,61 @@ def _analyze_presidential():
     return twins
 
 
+def _round_meta(twins):
+    """한 회차의 (필터링된) 쌍둥이 그룹 리스트 → hero용 집계.
+
+    web/src/twinStats.ts computeRoundStats 와 동일 규칙:
+      묶음 키 = category | json(group) | rank_pair join '-' | 정렬한 후보쌍 join '='
+      pairCount       = 서로 다른 후보쌍 수
+      totalLocations  = 모든 사례의 일치 투표소(count) 합
+      groupCount      = 쌍둥이 그룹 수
+      topPair         = 합산 투표소 최다 후보쌍 (동률이면 먼저 만난 쌍)
+    """
+    by_key = {}
+    key_order = []
+    total_locations = 0
+
+    for group in twins:
+        names = [cand for cand, _ in sorted(
+            group["votes"].items(), key=lambda item: -item[1])]
+        if len(names) < 2:
+            continue
+        first, second = names[0], names[1]
+
+        total_locations += group["count"]
+        sorted_pair = sorted([first, second])
+        key = "|".join([
+            str(group["category"]),
+            json.dumps(group["group"], ensure_ascii=False, sort_keys=True),
+            "-".join(str(rank) for rank in group["rank_pair"]),
+            "=".join(sorted_pair),
+        ])
+        entry = by_key.get(key)
+        if entry:
+            entry["locations"] += group["count"]
+        else:
+            parties = group.get("parties") or {}
+            by_key[key] = {
+                "names": [first, second],
+                "parties": [parties.get(first), parties.get(second)],
+                "locations": group["count"],
+            }
+            key_order.append(key)
+
+    top_pair = None
+    for key in key_order:
+        entry = by_key[key]
+        if top_pair is None or entry["locations"] > top_pair["locations"]:
+            top_pair = entry
+
+    return {
+        "pairCount": len(by_key),
+        "totalLocations": total_locations,
+        "groupCount": len(twins),
+        "topPair": top_pair,
+    }
+
+
 def _write_election(election_key, round_field, twins):
     by_round = defaultdict(list)
     for twin in twins:
@@ -439,9 +553,11 @@ def _write_election(election_key, round_field, twins):
             round_labels[str(r)] = f"제{r}대"
 
     counts = {}
+    rounds_meta = {}
     for r in rounds:
         filtered = [t for t in by_round[r] if t["count"] >= MIN_TWIN_COUNT]
         counts[str(r)] = len(filtered)
+        rounds_meta[str(r)] = _round_meta(filtered)
         safe_r = str(r).replace(" ", "_")
         path = f"{OUT_DIR}/twin_votes_{election_key}_{safe_r}.json"
         with open(path, "w", encoding="utf-8") as out_file:
@@ -449,7 +565,12 @@ def _write_election(election_key, round_field, twins):
         total = len(by_round[r])
         print(f"  → {path} ({len(filtered):,}개 / 전체 {total:,}개)")
 
-    return {"rounds": [str(r) for r in rounds], "counts": counts, "roundLabels": round_labels}
+    return {
+        "rounds": [str(r) for r in rounds],
+        "counts": counts,
+        "roundLabels": round_labels,
+        "rounds_meta": rounds_meta,
+    }
 
 
 def main():
@@ -463,9 +584,22 @@ def main():
     elections["총선"] = _write_election("총선", "선거_회차", assembly_twins)
     elections["대선"] = _write_election("대선", "선거_회차", pres_twins)
 
+    # 선거종류별·전체 누적 합계 (회차별 rounds_meta 합산)
+    totals = {}
+    all_total = {"pairCount": 0, "totalLocations": 0, "groupCount": 0}
+    for election_key, election in elections.items():
+        agg = {"pairCount": 0, "totalLocations": 0, "groupCount": 0}
+        for meta in election["rounds_meta"].values():
+            for field in agg:
+                agg[field] += meta[field]
+        totals[election_key] = agg
+        for field in all_total:
+            all_total[field] += agg[field]
+    totals["all"] = all_total
+
     index_path = f"{OUT_DIR}/twin_votes_index.json"
     with open(index_path, "w", encoding="utf-8") as out_file:
-        json.dump({"elections": elections}, out_file, ensure_ascii=False)
+        json.dump({"elections": elections, "totals": totals}, out_file, ensure_ascii=False)
     print(f"  → {index_path}")
     print("\n완료")
 

@@ -5,7 +5,13 @@
 그룹핑 키를 읍면동으로 통일하기 위한 정규화 함수를 검증한다.
 """
 
-from analyze_twin_votes import _normalize_emd_local, _emd_from_precinct
+import pandas as pd
+
+from analyze_twin_votes import (
+    _normalize_emd_local,
+    _emd_from_precinct,
+    _emd_turnout_map,
+)
 
 
 def test_precinct_suffix_제N투_제거():
@@ -51,3 +57,38 @@ def test_구시군_접두_공백이_붙은_투표구():
     # 총선 19대: '연기군 장기면제1투' (구시군명 + 공백 + 동명+제N투)
     assert _emd_from_precinct("연기군 장기면제1투") == "장기면"
     assert _emd_from_precinct("연기군 부용면제2투") == "부용면"
+
+
+def test_emd_turnout_map_투표구별_한번씩_합산():
+    # 같은 정규화 동(동면)의 투표구 2개(동면제1투/제2투)에서
+    # 투표수는 투표구별로 한 번씩만 더해야 한다(후보 행마다 중복 제거).
+    df = pd.DataFrame({
+        "회차": [9, 9, 9, 9],
+        "동": ["동면", "동면", "동면", "동면"],
+        "원본동": ["동면제1투", "동면제1투", "동면제2투", "동면제2투"],
+        "투표수": [100, 100, 50, 50],
+        "선거인수": [120, 120, 60, 60],
+    })
+    result = _emd_turnout_map(df, ["회차", "동"], "원본동")
+    # 동면: 투표수 100+50=150, 선거인수 120+60=180
+    assert result[(9, "동면")] == {"투표수": 150, "선거인수": 180}
+
+
+def test_enrich_location_1위와_투표수_채움():
+    from analyze_twin_votes import _enrich_location
+    loc = {"읍면동": "삼서면"}
+    vote_by_id = {"더불어민주당": 716, "국민의힘": 41, "진보당": 28}
+    turnout = {"투표수": 964, "선거인수": 1000}
+    _enrich_location(loc, vote_by_id, turnout)
+    assert loc["투표수"] == 964
+    assert loc["선거인수"] == 1000
+    assert loc["1위"] == "더불어민주당"
+    assert loc["1위득표"] == 716
+
+
+def test_enrich_location_turnout_없으면_생략():
+    from analyze_twin_votes import _enrich_location
+    loc = {"읍면동": "삼서면"}
+    _enrich_location(loc, {"진보당": 28, "정의당": 5}, None)
+    assert "투표수" not in loc
+    assert loc["1위"] == "진보당"
