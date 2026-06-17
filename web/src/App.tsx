@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { GitMerge } from 'lucide-react'
 import TwinVoteViewer from './components/TwinVoteViewer'
+import { computeRoundStats } from './twinStats'
+import { partyColor } from './partyColor'
 import type { TwinData, TwinIndex } from './types'
 
 const ELECTION_ORDER = ['지방선거', '총선', '대선']
@@ -48,6 +50,8 @@ export default function App() {
 
   const currentElectionIndex = index?.elections[selectedElection]
   const electionKeys = index ? ELECTION_ORDER.filter(k => k in index.elections) : []
+  const stats = useMemo(() => computeRoundStats(data), [data])
+  const roundLabel = (selectedRound != null && currentElectionIndex?.roundLabels[selectedRound]) || selectedRound || ''
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
@@ -138,6 +142,51 @@ export default function App() {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* 선택 회차 핵심 수치 */}
+        {data && !loading && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+            <div className="rounded-xl px-4 py-3" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+              <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>{roundLabel} 쌍둥이 후보쌍</div>
+              <div className="font-mono tabular-nums text-2xl font-bold mt-0.5" style={{ color: 'var(--color-accent)' }}>
+                {stats.pairCount.toLocaleString()}<span className="text-sm font-normal" style={{ color: 'var(--color-text-tertiary)' }}> 쌍</span>
+              </div>
+            </div>
+            <div className="rounded-xl px-4 py-3" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+              <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>동일 득표 사례</div>
+              <div className="font-mono tabular-nums text-2xl font-bold mt-0.5" style={{ color: 'var(--color-text)' }}>
+                {stats.groupCount.toLocaleString()}<span className="text-sm font-normal" style={{ color: 'var(--color-text-tertiary)' }}> 건</span>
+              </div>
+            </div>
+            <div className="rounded-xl px-4 py-3" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+              <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>일치한 투표소 총합</div>
+              <div className="font-mono tabular-nums text-2xl font-bold mt-0.5" style={{ color: 'var(--color-text)' }}>
+                {stats.totalLocations.toLocaleString()}<span className="text-sm font-normal" style={{ color: 'var(--color-text-tertiary)' }}> 곳</span>
+              </div>
+            </div>
+            <div className="rounded-xl px-4 py-3" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
+              <div className="text-xs" style={{ color: 'var(--color-text-tertiary)' }}>최다 반복 후보쌍</div>
+              {stats.topPair ? (
+                <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+                  <span className="inline-flex items-center gap-1">
+                    <span className="inline-block rounded-sm shrink-0" style={{ width: 7, height: 7, backgroundColor: partyColor(stats.topPair.parties[0]) }} />
+                    <span className="text-sm font-semibold" style={{ color: 'var(--color-text)' }}>{stats.topPair.names[0]}</span>
+                  </span>
+                  <span style={{ color: 'var(--color-text-tertiary)' }}>·</span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="inline-block rounded-sm shrink-0" style={{ width: 7, height: 7, backgroundColor: partyColor(stats.topPair.parties[1]) }} />
+                    <span className="text-sm font-semibold" style={{ color: 'var(--color-text)' }}>{stats.topPair.names[1]}</span>
+                  </span>
+                  <span className="font-mono tabular-nums text-base font-bold ml-0.5" style={{ color: 'var(--color-warning)' }}>
+                    {stats.topPair.locations.toLocaleString()}곳
+                  </span>
+                </div>
+              ) : (
+                <div className="text-sm mt-1.5" style={{ color: 'var(--color-text-tertiary)' }}>—</div>
+              )}
+            </div>
           </div>
         )}
 
