@@ -44,7 +44,8 @@ export default function Landing({ index, electionKeys, onPickElection }: Props) 
         className="mt-6 text-3xl sm:text-5xl font-bold leading-tight text-center"
         style={{ ...serif, color: 'var(--color-text)' }}
       >
-        두 투표소,<br />한 표도 다르지 않았다.
+        우연일까? 부정일까?<br />
+        <span style={{ color: 'var(--color-accent)' }}>과거엔 어땠을까.</span>
       </h1>
       <p className="mt-3 text-center text-sm" style={{ color: 'var(--color-text-secondary)' }}>
         이런 일이 과거 선거엔 얼마나 있었는지 — 숫자로만 보여준다.
@@ -138,7 +139,7 @@ export default function Landing({ index, electionKeys, onPickElection }: Props) 
             className="text-lg leading-snug pl-3"
             style={{ ...serif, borderLeft: '3px solid var(--color-text)', color: 'var(--color-text)' }}
           >
-            "조작일까, 우연일까?<br />— 과거엔 없었을까?"
+            "한 번은 우연,<br />— 여러 번은 무엇일까?"
           </blockquote>
           <div
             className="rounded-lg px-4 py-5 text-center"
