@@ -5,6 +5,7 @@ import About from './components/About'
 import Landing from './components/Landing'
 import HeroTrend from './components/HeroTrend'
 import AnimatedNumber from './components/AnimatedNumber'
+import AdBanner from './components/AdBanner'
 import { computeRoundStats } from './twinStats'
 import { partyColor } from './partyColor'
 import type { TwinData, TwinIndex, VotesCsvIndex } from './types'
@@ -109,7 +110,16 @@ export default function App() {
               ))}
             </div>
           )}
-          <nav className="ml-auto shrink-0">
+          <nav className="ml-auto shrink-0 flex items-center gap-2">
+            <a
+              href="https://www.woomunhyundap.com/?utm_source=pyosim&utm_medium=header"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline text-xs"
+              style={{ color: 'var(--color-text-tertiary)' }}
+            >
+              우문현답 ↗
+            </a>
             <a
               href="#about"
               className="text-xs px-3 py-1.5 rounded-lg"
@@ -289,10 +299,23 @@ export default function App() {
             이 자료는 <strong>특정 해석을 내놓지 않습니다.</strong> "과거 선거에서 이런
             일이 얼마나 자주 있었나"를 빈도로 보여주는 중립 자료이며, 확률 계산은 하지 않습니다.
           </p>
+          <p style={{ borderTop: '1px solid var(--color-border)', paddingTop: '0.75rem' }}>
+            <strong style={{ color: 'var(--color-text-secondary)' }}>제가 만든 또 다른 서비스</strong> ·{' '}
+            <a
+              href="https://www.woomunhyundap.com/?utm_source=pyosim&utm_medium=footer"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--color-accent)' }}
+            >
+              우문현답
+            </a>{' '}
+            — AI 면접관과 1:1 모의면접으로 꼬리질문까지 대비하는 공채 면접 연습. 진짜 면접은 두 번째 질문부터입니다.
+          </p>
         </div>
       </footer>
       </>
       )}
+      <AdBanner />
     </div>
   )
 }
