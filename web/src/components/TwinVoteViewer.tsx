@@ -20,6 +20,18 @@ const LEVEL_LABEL: Record<string, string> = {
   재외투표: '재외투표',
 }
 
+// 후보쌍 수가 제도적으로 적은 회차 안내. 키: `선거종류|회차`.
+const ROUND_NOTE: Record<string, string> = {
+  '지방선거|3':
+    '3회 지방선거(2002)는 사전투표 제도가 없어 전부 당일투표입니다. 사전투표가 있는 6회 이후보다 동률 후보쌍이 자연히 적게 나타납니다.',
+  '지방선거|4':
+    '4회 지방선거(2006)는 사전투표 제도가 없어 전부 당일투표입니다. 사전투표가 있는 6회 이후보다 동률 후보쌍이 자연히 적게 나타납니다.',
+  '지방선거|5':
+    '5회 지방선거(2010)는 사전투표 제도가 없어 전부 당일투표입니다. 사전투표가 있는 6회 이후보다 동률 후보쌍이 자연히 적게 나타납니다.',
+  '총선|제16대':
+    '제16대 총선(2000)은 비례대표 투표와 사전투표가 모두 없던 1인1표제 선거입니다. 총선 후보쌍의 대부분을 차지하는 비례 정당 동률이 발생할 수 없어, 지역구 당일투표에서 나온 소수만 집계됩니다.',
+}
+
 type EnrichedGroup = TwinGroup & { _level: string; _raceType: string; _electionType: string }
 
 // 같은 후보쌍(이름)을 한 비교단위 안에서 묶은 묶음.
@@ -232,10 +244,15 @@ function PairCard({ pair }: { pair: PairGroup }) {
 export default function TwinVoteViewer({
   data,
   roundLabel,
+  electionType,
+  round,
 }: {
   data: TwinData
   roundLabel: string
+  electionType: string
+  round: string | null
 }) {
+  const roundNote = round !== null ? ROUND_NOTE[`${electionType}|${round}`] : undefined
   const enriched = useMemo<EnrichedGroup[]>(() =>
     data.twins.map(group => {
       const { electionType: et, raceType, level } = parseCategory(group.category)
@@ -297,7 +314,7 @@ export default function TwinVoteViewer({
   const [selectedLevel, setSelectedLevel] = useState('all')
   const [selectedRace, setSelectedRace] = useState('all')
   const [selectedRank, setSelectedRank] = useState<number | 'all'>('all')
-  const [sortBy, setSortBy] = useState<'count' | 'major' | 'cases' | 'votes'>('count')
+  const [sortBy, setSortBy] = useState<'count' | 'major' | 'cases' | 'votes'>('major')
   const [page, setPage] = useState(1)
 
   const filtered = useMemo(() => {
@@ -395,6 +412,19 @@ export default function TwinVoteViewer({
           </span>
         )}
       </div>
+
+      {roundNote && (
+        <div
+          className="text-xs leading-relaxed rounded-lg px-3.5 py-3"
+          style={{
+            backgroundColor: 'var(--color-surface-2)',
+            border: '1px solid var(--color-border)',
+            color: 'var(--color-text-secondary)',
+          }}
+        >
+          {roundNote}
+        </div>
+      )}
 
       {pageItems.length > 0 ? (
         <div className="flex flex-col gap-3">

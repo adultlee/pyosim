@@ -138,11 +138,41 @@ def _clean_eupmd_local(eupmd, sido, gu, race_type):
 
 
 def _emd_from_precinct(precinct):
-    """투표구명 "청운동제1투"에서 동명 "청운동" 추출. 실패하면 투표구 그대로 반환."""
-    matched = re.match(r"^([가-힣0-9?·]+?)(?:제\s*\d+|제\s*[가-힣]|\d+)\s*투", precinct)
+    """투표구명 "청운동제1투"에서 동명 "청운동" 추출. 실패하면 투표구 그대로 반환.
+
+    처리 형태:
+      청운동제1투 / 종로1.2.3.4가동제1투 → 동명 + 제N투
+      중앙동투                          → 제N 없이 투로 끝남
+      연기군 장기면제1투                 → 구시군 접두(공백) + 동명 + 제N투
+    """
+    # 마지막 토큰이 '투'로 끝나는 투표구면 구시군 접두(공백)를 떼고 본다
+    if " " in precinct and precinct.split()[-1].endswith("투"):
+        precinct = precinct.split()[-1]
+    matched = re.match(r"^([가-힣0-9?·.]+?)(?:제\s*\d+|제\s*[가-힣]|\d+)\s*투$", precinct)
+    if matched:
+        return matched.group(1).strip()
+    # 제N 없이 동명 바로 뒤에 '투'만 붙은 경우 (예: 중앙동투)
+    matched = re.match(r"^([가-힣0-9?·.]+동)투$", precinct)
     if matched:
         return matched.group(1).strip()
     return precinct
+
+
+def _normalize_emd_local(eupmd):
+    """지방선거 그룹핑 키용 읍면동 정규화.
+
+    3회 원본의 투표구 단위(`동면제1투`)·동명 중복(`가평읍 가평읍`)을
+    실제 읍면동으로 합산해 같은 동이 한 키로 묶이게 한다.
+    4~9회의 정상 읍면동명은 변형하지 않는다.
+    """
+    name = str(eupmd)
+    # `동면제1투` → `동면`
+    name = _emd_from_precinct(name)
+    # `가평읍 가평읍` → `가평읍` (같은 단어 두 번 반복인 경우만)
+    parts = name.split()
+    if len(parts) == 2 and parts[0] == parts[1]:
+        name = parts[0]
+    return name
 
 
 def _analyze_local():
@@ -159,7 +189,18 @@ def _analyze_local():
     party_map = _build_party_map(df)
     sido_group_map = _build_sido_groups(df)
 
-    precinct_cols = ["선거_회차", "선거종류", "시도", "구시군", "읍면동", "level"]
+    # 읍면동 정규화: 투표구(`동면제1투`)·동명중복(`가평읍 가평읍`)을 실제 읍면동으로
+    # 통일한다. 그래야 같은 동의 투표구들이 한 투표소로 합산되어 가짜 "투표소 간
+    # 반복"이 생기지 않는다 (3회 지선이 이 문제로 후보쌍이 폭증했었다).
+    df = df.copy()
+    df["_emd_norm"] = [
+        _normalize_emd_local(_clean_eupmd_local(eupmd, sido, gu, race))
+        for eupmd, sido, gu, race in zip(
+            df["읍면동"], df["시도"], df["구시군"], df["선거종류"]
+        )
+    ]
+
+    precinct_cols = ["선거_회차", "선거종류", "시도", "구시군", "_emd_norm", "level"]
     sorted_df = df.sort_values(precinct_cols, kind="stable")
     key_columns = [sorted_df[col].tolist() for col in precinct_cols]
     identifier_list = sorted_df["식별자"].tolist()
@@ -174,14 +215,16 @@ def _analyze_local():
         if row_index < num_rows and key_tuples[row_index] == key_tuples[group_start]:
             continue
         회차, 선거종류, 시도, 구시군, 읍면동, level = key_tuples[group_start]
-        # 기호순(CSV 행 순서) 유지 — 정렬 없이 그대로
-        cands = [
-            (identifier_list[i], int(votes_list[i]))
-            for i in range(group_start, row_index)
-            if identifier_list[i] == identifier_list[i]
-        ]
-        cleaned_eupmd = _clean_eupmd_local(읍면동, 시도, 구시군, 선거종류)
-        location_entry = {"구시군": 구시군, "읍면동": cleaned_eupmd}
+        # 같은 정규화 읍면동 안에서 정당(식별자)별 득표를 합산 — 투표구가
+        # 여럿이면 한 투표소로 합쳐진다. 첫 등장 순서(기호순)를 유지한다.
+        vote_by_id: dict = {}
+        for i in range(group_start, row_index):
+            identifier = identifier_list[i]
+            if identifier != identifier:  # NaN 방어
+                continue
+            vote_by_id[identifier] = vote_by_id.get(identifier, 0) + int(votes_list[i])
+        cands = list(vote_by_id.items())
+        location_entry = {"구시군": 구시군, "읍면동": 읍면동}
         if 선거종류 in SIDO_WIDE_RACES:
             sido_key = sido_group_map.get((int(회차), 선거종류, 시도), 시도)
             prefix = (int(회차), 선거종류, sido_key, level)
@@ -259,11 +302,15 @@ def _analyze_assembly():
         if row_index < num_rows and key_tuples[row_index] == key_tuples[group_start]:
             continue
         회차, 선거구분, 선거구명, 시도, 구시군, 읍면동, level = key_tuples[group_start]
-        cands = [
-            (identifier_list[i], int(votes_list[i]))
-            for i in range(group_start, row_index)
-            if identifier_list[i] == identifier_list[i]
-        ]
+        # 같은 읍면동 안 투표구가 여러 행으로 들어오므로 후보(식별자)별
+        # 득표를 합산해 한 투표소로 통일한다. 첫 등장 순서 유지.
+        vote_by_id: dict = {}
+        for i in range(group_start, row_index):
+            identifier = identifier_list[i]
+            if identifier != identifier:  # NaN 방어
+                continue
+            vote_by_id[identifier] = vote_by_id.get(identifier, 0) + int(votes_list[i])
+        cands = list(vote_by_id.items())
         location_entry = {"구시군": 구시군, "읍면동": _restore_middot(읍면동)}
         if 선거구분 == "지역구":
             prefix = (회차, 선거구분, 선거구명, level)
@@ -335,11 +382,15 @@ def _analyze_presidential():
         if row_index < num_rows and key_tuples[row_index] == key_tuples[group_start]:
             continue
         회차, 시도, 구시군, 읍면동, level = key_tuples[group_start]
-        cands = [
-            (identifier_list[i], int(votes_list[i]))
-            for i in range(group_start, row_index)
-            if identifier_list[i] == identifier_list[i]
-        ]
+        # 같은 읍면동 안 투표구(`북부동제1투`…)가 여러 행으로 들어오므로
+        # 후보(식별자)별 득표를 합산해 한 투표소로 통일한다. 첫 등장 순서 유지.
+        vote_by_id: dict = {}
+        for i in range(group_start, row_index):
+            identifier = identifier_list[i]
+            if identifier != identifier:  # NaN 방어
+                continue
+            vote_by_id[identifier] = vote_by_id.get(identifier, 0) + int(votes_list[i])
+        cands = list(vote_by_id.items())
         location_entry = {"시도": 시도, "구시군": 구시군, "읍면동": _restore_middot(읍면동)}
         prefix = (int(회차), level)
         _rank_pair_buckets(cands, prefix, location_entry, buckets)

@@ -197,7 +197,7 @@ export default function App() {
         )}
 
         {data && selectedRound !== null && (
-          <TwinVoteViewer data={data} roundLabel={currentElectionIndex?.roundLabels[selectedRound] ?? selectedRound} />
+          <TwinVoteViewer data={data} roundLabel={currentElectionIndex?.roundLabels[selectedRound] ?? selectedRound} electionType={selectedElection} round={selectedRound} />
         )}
       </main>
 
