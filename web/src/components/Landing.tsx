@@ -138,7 +138,7 @@ export default function Landing({ index, electionKeys, onPickElection }: Props) 
             className="text-lg leading-snug pl-3"
             style={{ ...serif, borderLeft: '3px solid var(--color-text)', color: 'var(--color-text)' }}
           >
-            "조작일까, 우연일까?<br />— 그런데, 과거 선거엔 정말 없었을까?"
+            "조작일까, 우연일까?<br />— 과거엔 없었을까?"
           </blockquote>
           <div
             className="rounded-lg px-4 py-5 text-center"
