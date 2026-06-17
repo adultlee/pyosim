@@ -1,0 +1,118 @@
+{
+ "총선": {
+  "제16대": {
+   "file": "votes_총선_제16대.csv.gz",
+   "rows": 63455,
+   "bytes": 567866
+  },
+  "제17대": {
+   "file": "votes_총선_제17대.csv.gz",
+   "rows": 247595,
+   "bytes": 1712065
+  },
+  "제18대": {
+   "file": "votes_총선_제18대.csv.gz",
+   "rows": 259255,
+   "bytes": 1741281
+  },
+  "제19대": {
+   "file": "votes_총선_제19대.csv.gz",
+   "rows": 318657,
+   "bytes": 2041102
+  },
+  "제20대": {
+   "file": "votes_총선_제20대.csv.gz",
+   "rows": 427519,
+   "bytes": 2789499
+  },
+  "제21대": {
+   "file": "votes_총선_제21대.csv.gz",
+   "rows": 700600,
+   "bytes": 4247469
+  },
+  "제22대": {
+   "file": "votes_총선_제22대.csv.gz",
+   "rows": 729209,
+   "bytes": 4221230
+  }
+ },
+ "대선": {
+  "14": {
+   "file": "votes_대선_14.csv.gz",
+   "rows": 29272,
+   "bytes": 221543
+  },
+  "15": {
+   "file": "votes_대선_15.csv.gz",
+   "rows": 26173,
+   "bytes": 206397
+  },
+  "16": {
+   "file": "votes_대선_16.csv.gz",
+   "rows": 82320,
+   "bytes": 615876
+  },
+  "17": {
+   "file": "votes_대선_17.csv.gz",
+   "rows": 134930,
+   "bytes": 854336
+  },
+  "18": {
+   "file": "votes_대선_18.csv.gz",
+   "rows": 84738,
+   "bytes": 630353
+  },
+  "19": {
+   "file": "votes_대선_19.csv.gz",
+   "rows": 239915,
+   "bytes": 1407662
+  },
+  "20": {
+   "file": "votes_대선_20.csv.gz",
+   "rows": 227700,
+   "bytes": 1439320
+  },
+  "21": {
+   "file": "votes_대선_21.csv.gz",
+   "rows": 94305,
+   "bytes": 763397
+  }
+ },
+ "지방선거": {
+  "3": {
+   "file": "votes_지방선거_3.csv.gz",
+   "rows": 234289,
+   "bytes": 1943633
+  },
+  "4": {
+   "file": "votes_지방선거_4.csv.gz",
+   "rows": 115114,
+   "bytes": 1233325
+  },
+  "5": {
+   "file": "votes_지방선거_5.csv.gz",
+   "rows": 141136,
+   "bytes": 1503503
+  },
+  "6": {
+   "file": "votes_지방선거_6.csv.gz",
+   "rows": 214796,
+   "bytes": 2094037
+  },
+  "7": {
+   "file": "votes_지방선거_7.csv.gz",
+   "rows": 254393,
+   "bytes": 2376982
+  },
+  "8": {
+   "file": "votes_지방선거_8.csv.gz",
+   "rows": 192449,
+   "bytes": 1921909
+  },
+  "9": {
+   "file": "votes_지방선거_9.csv.gz",
+   "rows": 143170,
+   "bytes": 1236932
+  }
+ }
+}
