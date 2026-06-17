@@ -36,7 +36,7 @@ etl/                 선거종류별 파서 (Python, TDD)
   pres/              대선      — parse_14 ~ parse_21
 analyze_twin_votes.py  tidy CSV → web/public/twin_votes_*.json 굽는 스크립트
 web/                 Vite + React + TS 정적 SPA (배포 대상)
-  public/            twin_votes_{선거}_{회차}.json + twin_votes_index.json
+  public/            twin_votes_{선거}_{회차}.json + twin_votes_index.json + votes_{선거}_{회차}.csv.gz(개표 원본 다운로드) + votes_csv_index.json
   src/App.tsx        index.json 읽고 회차별 JSON fetch
 data/raw/            선관위 원본 (gitignore, 로컬 전용)
 data_processed/      tidy CSV 산출물 (gitignore, ETL로 재생성)
@@ -51,6 +51,7 @@ python -m etl.local.build       # 지방선거  → data_processed/지방선거.
 python -m etl.assembly.build    # 총선      → data_processed/국회의원선거.csv
 python -m etl.pres.build        # 대선      → data_processed/대통령선거.csv
 python analyze_twin_votes.py    # CSV 3종 → web/public/twin_votes_*.json + index
+python split_votes_csv.py        # CSV 3종 → web/public/votes_*.csv.gz + votes_csv_index.json (회차별 다운로드용)
 ```
 
 - 파서는 **TDD로 작성**한다. 새 회차 파서는 `etl/<종류>/validate.py`의 검증 게이트(공식 득표 총합 대조 등)를 통과해야 한다.
