@@ -110,16 +110,7 @@ export default function App() {
               ))}
             </div>
           )}
-          <nav className="ml-auto shrink-0 flex items-center gap-2">
-            <a
-              href="https://www.woomunhyundap.com/?utm_source=pyosim&utm_medium=header"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline text-xs"
-              style={{ color: 'var(--color-text-tertiary)' }}
-            >
-              우문현답 ↗
-            </a>
+          <nav className="ml-auto shrink-0">
             <a
               href="#about"
               className="text-xs px-3 py-1.5 rounded-lg"
