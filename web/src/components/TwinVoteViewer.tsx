@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import type { TwinGroup, TwinData } from '../types'
+import type { TwinGroup, TwinData, VotesCsvMeta } from '../types'
 import { partyColor, partyRankForRound } from '../partyColor'
 
 const PAGE_SIZE = 50
@@ -246,11 +246,13 @@ export default function TwinVoteViewer({
   roundLabel,
   electionType,
   round,
+  csvMeta,
 }: {
   data: TwinData
   roundLabel: string
   electionType: string
   round: string | null
+  csvMeta: VotesCsvMeta | null
 }) {
   const roundNote = round !== null ? ROUND_NOTE[`${electionType}|${round}`] : undefined
   const enriched = useMemo<EnrichedGroup[]>(() =>
@@ -406,11 +408,24 @@ export default function TwinVoteViewer({
         <span className="text-xs font-mono" style={{ color: 'var(--color-text-tertiary)' }}>
           {roundLabel} · 후보쌍 {filtered.length.toLocaleString()}개 · {({ count: '반복 횟수', major: '주요 정당', cases: '사례 수', votes: '득표 큰' } as const)[sortBy]} 순
         </span>
-        {totalPages > 1 && (
-          <span className="text-xs font-mono" style={{ color: 'var(--color-text-tertiary)' }}>
-            {page} / {totalPages} 페이지
-          </span>
-        )}
+        <div className="flex items-center gap-3">
+          {totalPages > 1 && (
+            <span className="text-xs font-mono" style={{ color: 'var(--color-text-tertiary)' }}>
+              {page} / {totalPages} 페이지
+            </span>
+          )}
+          {csvMeta && (
+            <a
+              href={`/${csvMeta.file}`}
+              download
+              title="이 회차 전체 투표소 개표결과(tidy CSV)를 gzip 압축으로 내려받습니다. 해제하면 .csv 입니다."
+              className="text-xs font-mono px-2.5 py-1 rounded-lg"
+              style={{ backgroundColor: 'var(--color-surface-2)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border)' }}
+            >
+              ⬇ 개표 원본 CSV ({(csvMeta.bytes / 1024 / 1024).toFixed(1)}MB, gzip)
+            </a>
+          )}
+        </div>
       </div>
 
       {roundNote && (
