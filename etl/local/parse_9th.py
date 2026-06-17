@@ -25,13 +25,14 @@ CITY_CODE_TO_SIDO = {
     "4900": "제주특별자치도",
 }
 
+# ec코드 → 선거종류. 원본 HTML의 electionCode select 값으로 검증한 매핑.
+# ec2는 같은 날 치러진 국회의원 재보궐선거라 지방선거가 아니므로 제외한다.
 EC_TO_TYPE = {
-    "ec2": "교육감",
     "ec3": "시도지사",
     "ec4": "구시군장",
     "ec5": "시도의원",
-    "ec6": "광역비례",
-    "ec8": "구시군의원",
+    "ec6": "구시군의원",
+    "ec8": "광역비례",
     "ec9": "기초비례",
 }
 
@@ -189,7 +190,9 @@ def parse_9th(raw_dir=RAW_DIR):
         city_code = parts[1].replace("city", "")
         sgg_code = parts[2].replace("sgg", "")
 
-        election_type = EC_TO_TYPE.get(ec_code, ec_code)
+        election_type = EC_TO_TYPE.get(ec_code)
+        if election_type is None:  # ec2(국회의원 재보궐) 등 지방선거 아닌 코드 제외
+            continue
         sido = CITY_CODE_TO_SIDO.get(city_code, city_code)
         gugun_fallback = sgg_code  # HTML에서 못 읽을 경우 코드 그대로
 

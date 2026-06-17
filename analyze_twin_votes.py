@@ -38,9 +38,13 @@ SIDO_WIDE_RACES = {"시도지사", "광역비례", "교육감"}
 
 OUT_DIR = "web/public"
 
-# 최소 일치 투표구 수: 2개(최솟값)이면 파일이 수 GB가 됨.
-# 3 이상으로 설정하면 파일 크기가 크게 줄고, 더 주목할 만한 사례만 남는다.
-MIN_TWIN_COUNT = 3
+# 최소 일치 투표구 수: 2개 = 서로 다른 두 투표소에서 반복되면 쌍둥이(정의 그대로).
+# (과거 3으로 올렸던 건 0표 노이즈로 파일이 컸기 때문 — 이제 MIN_VOTE_THRESHOLD로 걸러 2로 둔다.)
+MIN_TWIN_COUNT = 2
+
+# 최소 득표 임계값: 두 후보 모두 이 값 이상인 동률만 쌍둥이로 인정.
+# 1~9표 군소후보 저득표 동률은 노이즈이므로 제외 (CLAUDE.md 핵심 품질 기준).
+MIN_VOTE_THRESHOLD = 10
 
 
 def _rank_pair_buckets(cands: list, prefix: tuple, location_entry: dict,
@@ -59,6 +63,31 @@ def _rank_pair_buckets(cands: list, prefix: tuple, location_entry: dict,
         pair = (ranked_cands[rank], ranked_cands[rank + 1])
         bucket_key = prefix + (rank + 1,) + pair  # rank 1-based
         buckets[bucket_key].append(location_entry)
+
+
+def _build_party_map(df: pd.DataFrame) -> dict:
+    """식별자(후보자 또는 정당) → 정당명 매핑. 인물 후보는 소속 정당, 비례는 정당=식별자.
+
+    동명이인이 다른 정당이면 마지막 값으로 덮어쓰나, 동률 쌍 표시용이라 실무상 충분하다.
+    """
+    party_map: dict = {}
+    sub = df.dropna(subset=["식별자"])
+    for identifier, party in zip(sub["식별자"].tolist(), sub["정당"].tolist()):
+        if isinstance(party, str) and party:
+            party_map[identifier] = party
+        else:
+            party_map.setdefault(identifier, identifier)
+    return party_map
+
+
+def _parties_for(candidates: tuple, party_map: dict) -> dict:
+    """동률 두 후보의 {후보: 정당} 맵. 매핑 없으면 생략."""
+    result = {}
+    for cand, _ in candidates:
+        party = party_map.get(cand)
+        if party:
+            result[cand] = party
+    return result
 
 
 def _build_sido_groups(df: pd.DataFrame) -> dict:
@@ -127,6 +156,7 @@ def _analyze_local():
     df = df.dropna(subset=["식별자"])
     print(f"  {len(df):,}행")
 
+    party_map = _build_party_map(df)
     sido_group_map = _build_sido_groups(df)
 
     precinct_cols = ["선거_회차", "선거종류", "시도", "구시군", "읍면동", "level"]
@@ -165,8 +195,8 @@ def _analyze_local():
         if len(locations) < 2:
             continue
         candidates = bucket_key[-2:]
-        # 두 후보가 모두 0표인 쌍은 의미 없는 노이즈이므로 제외
-        if any(score == 0 for _, score in candidates):
+        # 두 후보 중 하나라도 임계값 미만이면 저득표 노이즈이므로 제외
+        if any(score < MIN_VOTE_THRESHOLD for _, score in candidates):
             continue
         rank = bucket_key[-3]
         prefix_part = bucket_key[:-3]
@@ -184,6 +214,7 @@ def _analyze_local():
             "group": {"선거_회차": 회차, "시도": sido_key, "구시군": gu},
             "locations": locations,
             "votes": votes_map,
+            "parties": _parties_for(candidates, party_map),
             "total_votes": total,
             "count": len(locations),
             "rank_pair": [rank, rank + 1],
@@ -202,6 +233,7 @@ def _analyze_assembly():
     df = df[~df["level"].isin(JUNK_LEVELS)]
     df["식별자"] = df["후보자"].fillna(df["정당"])
     df = df.dropna(subset=["식별자"])
+    party_map = _build_party_map(df)
     df["구시군"] = df["구시군"].fillna("")
     df["선거구명"] = df["선거구명"].fillna("")
     # 18대·19대는 읍면동이 없고 투표구에 "청운동제1투" 형태로 들어 있음
@@ -245,8 +277,8 @@ def _analyze_assembly():
         if len(locations) < 2:
             continue
         candidates = bucket_key[-2:]
-        # 두 후보가 모두 0표인 쌍은 의미 없는 노이즈이므로 제외
-        if any(score == 0 for _, score in candidates):
+        # 두 후보 중 하나라도 임계값 미만이면 저득표 노이즈이므로 제외
+        if any(score < MIN_VOTE_THRESHOLD for _, score in candidates):
             continue
         rank = bucket_key[-3]
         prefix_part = bucket_key[:-3]
@@ -265,6 +297,7 @@ def _analyze_assembly():
             "group": group_info,
             "locations": locations,
             "votes": votes_map,
+            "parties": _parties_for(candidates, party_map),
             "total_votes": total,
             "count": len(locations),
             "rank_pair": [rank, rank + 1],
@@ -283,6 +316,7 @@ def _analyze_presidential():
     df = df[~df["level"].isin(JUNK_LEVELS)]
     df["식별자"] = df["후보자"].fillna(df["정당"])
     df = df.dropna(subset=["식별자"])
+    party_map = _build_party_map(df)
     df["구시군"] = df["구시군"].fillna("")
     print(f"  {len(df):,}행")
 
@@ -316,8 +350,8 @@ def _analyze_presidential():
         if len(locations) < 2:
             continue
         candidates = bucket_key[-2:]
-        # 두 후보가 모두 0표인 쌍은 의미 없는 노이즈이므로 제외
-        if any(score == 0 for _, score in candidates):
+        # 두 후보 중 하나라도 임계값 미만이면 저득표 노이즈이므로 제외
+        if any(score < MIN_VOTE_THRESHOLD for _, score in candidates):
             continue
         rank = bucket_key[-3]
         회차, level = bucket_key[:2]
@@ -328,6 +362,7 @@ def _analyze_presidential():
             "group": {"선거_회차": 회차},
             "locations": locations,
             "votes": votes_map,
+            "parties": _parties_for(candidates, party_map),
             "total_votes": total,
             "count": len(locations),
             "rank_pair": [rank, rank + 1],
