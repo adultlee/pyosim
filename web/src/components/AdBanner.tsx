@@ -27,9 +27,6 @@ export default function AdBanner() {
         ×
       </button>
 
-      <div className="text-xs mb-1" style={{ color: 'var(--color-text-tertiary)' }}>
-        제가 만든 또 다른 서비스예요
-      </div>
       <a
         href="https://www.woomunhyundap.com/?utm_source=pyosim&utm_medium=banner"
         target="_blank"
